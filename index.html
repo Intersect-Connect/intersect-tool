@@ -1,0 +1,84 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./assets/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/uikit.min.css" />
+    <link rel="stylesheet" href="./assets/css/framework/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.min.css">
+</head>
+
+<body>
+    <header class="has-text-centered is-centered">
+        <nav class="uk-navbar-container uk-margin uk-navbar" uk-navbar>
+            <div class="uk-navbar-left">
+                <div class="uk-navbar-item">
+                    <a id="backButton" class="d-none navbar-item is-uppercase text-white uk-text-decoration-none bg-transparent">
+                        <i class="fas fa-angle-left fa-2x me-2"></i> Retour
+                    </a>
+                </div>
+            </div>
+            <div class="uk-navbar-center">
+                <ul class="uk-navbar-nav">
+                    <li>
+                        <a class="text-white">
+                            Intersect Tools
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right">
+                <div class="uk-navbar-item">
+                    <span id="miniApp" class="uk-button uk-button-secondary uk-icon uk-margin-small-right p-2" uk-icon="icon: minus"></span>
+                    <span id="closeApp" class="uk-button uk-button-danger uk-icon uk-margin-small-right border-0 p-2" uk-icon="icon: close"></span>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" aria-current="page" href="/" data-navigo data-trans="menuHome">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/accounts" data-navigo data-trans="menuAccounts">Accounts list</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/players" data-navigo data-trans="menuPlayers">Players list</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/guilds" data-navigo data-trans="menuGuilds">Guilds list</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white disabled" href="/players" data-navigo data-trans="menuGlobalVariables">Global Variables list</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav m-auto d-none">
+                        <li class="nav-item mt-3">
+                            <form class="d-flex" role="search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-success" type="submit">Search</button>
+                              </form>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/about" data-navigo data-trans="menuAbout">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/settings" data-navigo data-trans="menuSetting">Settings</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="content container"></div>
+    <script src="./assets/js/navigo.min.js"></script>
+    <script src="./assets/js/uikit.min.js" defer></script>
+    <script src="./assets/js/uikit-icons.min.js" defer></script>
+    <script src="./assets/js/framework/bootstrap.bundle.min.js" defer></script>
+</body>

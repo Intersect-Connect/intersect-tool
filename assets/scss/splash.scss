@@ -1,0 +1,13 @@
+body {
+    background: url(../../splash/mageworkstudios.png);
+    color: white;
+    background-size: contain;
+    background-position: bottom;
+    transition: .5s ease;
+}
+
+.spinner-border {
+    position: absolute;
+    top: 28rem;
+    left: 25rem;
+}

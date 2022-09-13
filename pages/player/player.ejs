@@ -1,0 +1,168 @@
+<section id="mainSection">
+   <div class="row">
+        <div class="col-md-12 mt-5">
+            <div class="card rounded-0 border-0">
+                <div class="card-header rounded-0">
+                    <h5 class="card-title text-white text-center" id="username"><%= characterData.Name %>@<%= userData.Name %></h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <% if (displayNotification) { %>
+                        <div class="col-12 mb-3">
+                            <%- notification %>
+                        </div>
+                        <% } %>
+
+                        <div class="col-md-6">
+                            <ul class="list-group">
+                                <h2 id="userId">
+                                    <a class="btn btn-primary text-decoration-none" href="account/<%= characterData.UserId %>" data-navigo data-trans="seeAccount">See account</a>
+                                </h2>                      
+                                <li class="list-group-item rounded-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-1">
+                                            <label for="hp">HP:</label>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <div class="progress">
+                                                <div id="hp" class="progress-bar bg-success" role="progressbar" style="width: <%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%;" aria-valuenow="<%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item rounded-0">
+                                    <div class="row justify-content-center">
+        
+                                        <div class="col-md-1">
+                                            <label for="hp">MP:</label>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <div class="progress">
+                                                <div id="mp" class="progress-bar bg-primary" role="progressbar" style="width: <%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%;" aria-valuenow="<%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item rounded-0">
+                                    <span id="level" data-trans="wordLevel">Level </span>: <%= characterData.Level %>
+                                </li>
+                                <li class="list-group-item rounded-0">
+                                    <span id="class" data-trans="wordClass">Class </span>: <%= characterData.ClassName %>
+                                </li>
+                                <li class="list-group-item rounded-0">
+                                    <% if (characterData.Online) { %>
+                                        <span class="text-success" data-trans="playerOnline">Player is online</span>
+                                    <% }else{ %>
+                                        <span class="text-danger" data-trans="playerOffline">Player is offline</span>
+                                    <% } %>
+                                </li>
+                            </ul>
+                        </div>
+    
+                        <div class="col-md-6">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item list-style-none" role="presentation">
+                                  <button class="nav-link active" id="pills-penalties-tab" data-bs-toggle="pill" data-bs-target="#pills-penalties" type="button" role="tab" aria-controls="pills-penalties" aria-selected="true" data-trans="wordPenalties">Penalties</button>
+                                </li>
+                                <li class="nav-item list-style-none" role="presentation">
+                                  <button class="nav-link" id="pills-items-tab" data-bs-toggle="pill" data-bs-target="#pills-items" type="button" role="tab" aria-controls="pills-items" aria-selected="false" data-trans="wordItems">Items</button>
+                                </li>
+                                <li class="nav-item list-style-none" role="presentation">
+                                  <button class="nav-link" id="pills-inventaire-tab" data-bs-toggle="pill" data-bs-target="#pills-inventaire" type="button" role="tab" aria-controls="pills-inventaire" aria-selected="false" data-trans="wordInventory">Inventory</button>
+                                </li>
+                                <li class="nav-item list-style-none" role="presentation">
+                                  <button class="nav-link" id="pills-bank-tab" data-bs-toggle="pill" data-bs-target="#pills-bank" type="button" role="tab" aria-controls="pills-bank" aria-selected="false" data-trans="wordBank">Disabled</button>
+                                </li>
+                              </ul>
+                              <div class="tab-content" id="pills-tabContent">
+                                <!-- Penalities -->
+                                <div class="tab-pane fade show active" id="pills-penalties" role="tabpanel" aria-labelledby="pills-penalties-tab" tabindex="0">
+                                    <form id="sanctionForm">
+                                        <div class="mt-3 mb-3">
+                                            <label for="duration" class="text-dark" data-trans="penaltiesDuration">Duration of the penalties</label>
+                                            <input id="duration" name="duration" type="number" min="5" max="999" class="form-control rounded-0">
+                                        </div>
+                                        <div class="mt-3 mb-3">
+                                            <label for="reason" class="text-dark" data-trans="penaltiesReason">Reason of the penalties</label>
+                                            <input id="reason" name="reason" type="text" class="form-control rounded-0">
+                                        </div>
+                                        <div class="btn-group">
+                                            <% if (userData.IsBanned == false) { %>
+                                                <button id="banButton" type="button" class="btn btn-danger rounded-0">Ban</button>
+                                            <% } %>
+
+                                            <% if (userData.IsBanned == true) { %>
+                                                <button id="unbanButton" type="button" class="btn btn-success rounded-0">Unban</button>
+                                            <% } %>
+
+                                            <% if (userData.IsMuted == false) { %>
+                                                <button id="muteButton" type="button" class="btn btn-warning rounded-0">Mute</button>
+                                            <% } %>
+
+                                            <% if (userData.IsMuted == true) { %>
+                                                <button id="unmuteButton" type="button" class="btn btn-success rounded-0">Unmute</button>
+                                            <% } %>
+                                                <button id="kickButton" type="button" class="btn btn-primary rounded-0">Kick</button>
+                                                <button id="killButton" type="button" class="btn btn-primary rounded-0">Kill</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- End Penalities -->
+                                <!-- Items -->
+                                <div class="tab-pane fade" id="pills-items" role="tabpanel" aria-labelledby="pills-items-tab" tabindex="0">
+                                    <form id="giveItem">
+                                        <div class="mt-3 mb-3">
+                                            <label for="itemId" class="text-dark" data-trans="labelItemId">Enter the id of the item</label>
+                                            <input id="itemId" name="itemId" type="text" class="form-control rounded-0">
+                                        </div>
+                                        <div class="mt-3 mb-3">
+                                            <label for="quantity" class="text-dark" data-trans="labelItemQuantity">Enter the quantity of the item</label>
+                                            <input id="quantity" name="quantity" type="number" min="0" max="9999" class="form-control rounded-0">
+                                        </div>
+                                        <button id="giveButton" class="btn btn-primary" data-trans="giveItem">
+                                            Give item
+                                        </button>
+                                        <button id="takeButton" class="btn btn-primary" data-trans="takeItem">
+                                            Take item
+                                        </button>
+                                    </form>
+                                </div>
+                                <!-- End Items -->
+                                <!-- Inventory -->
+                                <div class="tab-pane fade" id="pills-inventaire" role="tabpanel" aria-labelledby="pills-inventaire-tab" tabindex="0">
+                                    <ul id="inventoryList" class="list-group">
+                                        <% inventory.forEach(function(item) { %>
+                                            <% if(item.ItemName != "ERR_DELETED") { %>
+                                            <li class="list-group-item">
+                                                <%= item.ItemName %> (<%= item.Quantity %>)
+                                            </li>
+                                            <% } %>
+                                        <% }) %>
+                                    </ul>
+                                </div>
+                                <!-- End Inventory -->
+                                <!-- Bank -->
+                                <div class="tab-pane fade" id="pills-bank" role="tabpanel" aria-labelledby="pills-bank-tab" tabindex="0">
+                                    <ul id="inventoryList" class="list-group">
+                                        <% bank.forEach(function(item) { %>
+                                            <% if(item.ItemName != "ERR_DELETED") { %>
+                                            <li class="list-group-item">
+                                                <%= item.ItemName %> (<%= item.Quantity %>)
+                                            </li>
+                                            <% } %>
+                                        <% }) %>
+                                    </ul>
+                                </div>
+                                <!-- End Bank -->
+                              </div>
+                            
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

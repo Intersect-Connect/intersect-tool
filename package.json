@@ -1,0 +1,89 @@
+{
+    "name": "intersect-tool",
+    "version": "1.0.3",
+    "description": "Intersect Admin Tool for Intersect Engine",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder",
+        "build": "electron-builder build --win"
+    },
+    "repository": "https://github.com/electron/electron-quick-start",
+    "keywords": [
+        "Electron",
+        "quick",
+        "start",
+        "tutorial",
+        "demo"
+    ],
+    "author": "GitHub",
+    "license": "CC0-1.0",
+    "devDependencies": {
+        "electron": "^20.1.3",
+        "electron-builder": "^23.3.3"
+    },
+    "dependencies": {
+        "bootstrap": "^5.2.1",
+        "compression": "^1.7.4",
+        "ejs": "^3.1.8",
+        "electron-store": "^8.1.0",
+        "electron-updater": "^5.2.1",
+        "navigo": "^8.11.1"
+    },
+    "build": {
+        "appId": "com.intersect-tool.thomasfdsapp",
+        "productName": "Intersect-Tools",
+        "copyright": "Copyright © 2022 Thomasfds",
+        "icon": "build/Icon.ico",
+        "directories": {
+            "output": "release/"
+        },
+        "extraMetadata": {
+            "name": "Intersect-Tools",
+            "description": "Intersect Admin Tool for Intersect Engine"
+        },
+        "compression": "maximum",
+        "publish": [
+            {
+                "provider": "generic",
+                "url": "https://intersect-connect.tk/download/intersect-tools/"
+            }
+        ],
+        "win": {
+            "icon": "build/ico.png",
+            "target": [
+                "nsis"
+            ],
+            "requestedExecutionLevel": "",
+            "artifactName": "${productName}-portable.${ext}",
+            "executableName": "intersect-tool"
+        },
+        "linux": {
+            "icon": "build/ico.png",
+            "target": "AppImage",
+            "artifactName": "${productName}-Linux.${ext}",
+            "executableName": "intersect-tool",
+            "description": "Intersect Admin Tool for Intersect Engine",
+            "category": "Application"
+        },
+        "mac": {
+            "icon": "build/ico.png",
+            "target": "zip",
+            "category": "Application"
+        },
+        "nsis": {
+            "oneClick": true,
+            "allowToChangeInstallationDirectory": false,
+            "perMachine": false,
+            "deleteAppDataOnUninstall": true,
+            "artifactName": "${productName}-Setup.${ext}"
+        },
+        "appImage": {
+            "artifactName": "${productName}.${ext}"
+        },
+        "snap": {
+            "artifactName": "${productName}.${ext}"
+        }
+    }
+}

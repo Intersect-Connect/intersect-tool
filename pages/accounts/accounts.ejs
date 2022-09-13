@@ -1,0 +1,55 @@
+<section id="mainSection">
+    <div class="row">
+        <div class="col-md-12 mt-5">
+            <div class="card rounded-0 border-0">
+                <div class="card-header rounded-0">
+                    <h5 class="card-title text-white text-center" data-trans="accountsTitle">Accounts List</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-area">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col" data-trans="wordName">Name</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersList">
+                                <% if(users.length != 0) { %>
+                                    <% users.forEach(function(user) { %>
+                                    <tr>
+                                        <td><%= user.Name %></td>
+                                        <td>
+                                            <a class="btn btn-primary text-decoration-none" href="/account/<%= user.Name %>" data-navigo data-trans="seeAccount">
+                                                See account
+                                            </a>
+                                            <a class="btn btn-primary text-decoration-none" href="/account/<%= user.Id %>/logs/pages/0" data-navigo data-trans="seeAccountLog">
+                                                See account log
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                <% }else{ %>
+                                    <tr>
+                                        <td colspan="12">No Data</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% if(pages != 0) { %>
+                        <select name="pagesList" id="pageList" class="form-control">
+                            <option value="pageList" data-trans="pagesList">Pages List</option>
+                            <% for (let index=0; index < pages; index++) {%>
+                            <option value="<%= index %>">
+                                <%= index + 1 %>
+                            </option>
+                            <% } %>
+                        </select>
+                      <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

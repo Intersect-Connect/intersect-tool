@@ -1,0 +1,164 @@
+body {
+    -webkit-animation: fadein 1.5s; //I use chrome
+    background-color: #1A1C23;
+    background-size: cover !important;
+    overflow: hidden !important;
+    width: 100%;
+    height: 100vh;
+    min-height: 100%;
+    max-height: 100%;
+    color: white;
+}
+
+header {
+    @media (min-width: 1200px) {
+        padding-bottom: 0 !important;
+    }
+    @media (min-width: 1400px) {
+        padding-bottom: 0 !important;
+    }
+}
+
+main {
+    @media (min-width: 1200px) {
+        width: 100%;
+        padding: 1rem;
+        margin-top: 10px;
+        padding: 1rem;
+    }
+    @media (min-width: 1400px) {
+        width: 100%;
+        padding: 2rem;
+        margin-top: 10px;
+        padding: 1rem;
+    }
+}
+
+.download {
+    background: #262732bd;
+    border-radius: 0px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    height: 33rem;
+}
+
+.navbar-start {
+    justify-content: center;
+    margin-right: auto;
+}
+
+nav.uk-navbar {
+    height: 50px;
+    margin-bottom: 0 !important;
+    background-color: #17253B!important;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    .uk-navbar-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: .25em;
+        box-sizing: border-box;
+        min-height: 50px !important;
+        -webkit-app-region: no-drag;
+        color: white!important
+    }
+}
+
+nav.navbar {
+    // background-color: #0f1e38e0 !important;
+    background: #0c1421 !important;
+    color: white !important;
+    display: flex !important;
+    border: 0px solid #cdcfeb;
+    .navbar-item {
+        color: white !important;
+        width: 11.5rem;
+        text-align: center;
+        justify-content: center;
+        @media (min-width: 1000px) {
+            width: 10.8rem !important;
+        }
+        @media (min-width: 1100px) {
+            width: 11.8rem !important;
+        }
+        @media (min-width: 1200px) {
+            width: 37.8rem !important;
+        }
+        @media (min-width: 1400px) {
+            width: 14.6rem !important;
+        }
+        &:hover {
+            background: rgba(255, 255, 255, .05) !important;
+        }
+        &:focus-within {
+            background: rgba(255, 255, 255, .05) !important;
+        }
+    }
+    .navbar-link {
+        color: white !important;
+        &:hover {
+            background: rgba(255, 255, 255, .05) !important;
+        }
+        &:focus-within {
+            background: rgba(255, 255, 255, .05) !important;
+        }
+    }
+    .navbar-dropdown {
+        color: white !important;
+        background-color: #0f1e38e0 !important;
+        &:focus-within {
+            background: rgba(255, 255, 255, .05) !important;
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    display: none !important;
+}
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.center-middle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center-middle-fixed {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card-header {
+    background: #162447 !important;
+    color: white !important;
+    text-align: center!important;
+}
+
+.list-style-none{
+    list-style: none!important;
+}
+
+#inventoryList{
+    min-height: 200px;
+    height: 215px;
+    overflow-x: auto;
+}
+
+.table-area{
+    min-height: 200px;
+    height: 370px;
+    overflow-x: auto;
+}
