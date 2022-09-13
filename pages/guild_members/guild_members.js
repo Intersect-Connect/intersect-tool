@@ -1,33 +1,37 @@
 let translation = null;
 let api = null;
 let ipcRenderer = null;
+let element = null;
 
-function renderGuild(ejs, content, translateLib, apiLib, ipcRendererLib, data) {
+function renderGuildMembers(ejs, content, translateLib, apiLib, ipcRendererLib, elementLib, data) {
     translation = translateLib;
     api = apiLib;
     ipcRenderer = ipcRendererLib;
-    return fetch("./pages/guild/guild.ejs")
+    element = elementLib;
+    return fetch("./pages/guild_members/guild_members.ejs")
         .then((response) => response.text())
         .then(async (mainHtml) => {
             let displayNotification = false;
             let notification = null;
-
             init(data);
 
             function init(data) {
+                console.log(data)
                 content.innerHTML = ejs.render(mainHtml, {
-                    "guild":data.guild,
-                    "members":data.members.Values,
-                    "pages":Math.round(data.members.Total / data.members.PageSize)
+                    "guild": data.guild,
+                    "members": data.members.Values,
+                    "pages": Math.round(data.members.Total / data.members.PageSize),
+                    displayNotification,
+                    notification
                 });
                 translation.getTranslation();
                 const pageListSelect = document.getElementById("pageList");
 
-                if(pageListSelect){
+                if (pageListSelect) {
                     pageListSelect.addEventListener("change", (e) => {
                         let value = e.target.value;
 
-                        if(value != "PageList"){
+                        if (value != "PageList") {
                             return ipcRenderer.send("goTo", `/guild/${data.guild.Id}/pages/${value}`);
                         }
                     })
@@ -38,4 +42,4 @@ function renderGuild(ejs, content, translateLib, apiLib, ipcRendererLib, data) {
         });
 };
 
-exports.renderGuild = renderGuild;
+exports.renderGuildMembers = renderGuildMembers;

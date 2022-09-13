@@ -71,59 +71,83 @@ nav.uk-navbar .uk-navbar-item {
   color: white !important;
 }
 
-nav.navbar {
+#mainNav {
   background: #0c1421 !important;
   color: white !important;
   display: flex !important;
   border: 0px solid #cdcfeb;
+  height: 50px;
 }
-nav.navbar .navbar-item {
+#mainNav .nav-item a {
+  text-decoration: none !important;
+}
+#mainNav .nav-item:hover {
+  background: #182b4b !important;
+}
+#mainNav .navbar-item {
   color: white !important;
   width: 11.5rem;
   text-align: center;
   justify-content: center;
 }
 @media (min-width: 1000px) {
-  nav.navbar .navbar-item {
+  #mainNav .navbar-item {
     width: 10.8rem !important;
   }
 }
 @media (min-width: 1100px) {
-  nav.navbar .navbar-item {
+  #mainNav .navbar-item {
     width: 11.8rem !important;
   }
 }
 @media (min-width: 1200px) {
-  nav.navbar .navbar-item {
+  #mainNav .navbar-item {
     width: 37.8rem !important;
   }
 }
 @media (min-width: 1400px) {
-  nav.navbar .navbar-item {
+  #mainNav .navbar-item {
     width: 14.6rem !important;
   }
 }
-nav.navbar .navbar-item:hover {
+#mainNav .navbar-item:hover {
   background: rgba(255, 255, 255, 0.05) !important;
 }
-nav.navbar .navbar-item:focus-within {
+#mainNav .navbar-item:focus-within {
   background: rgba(255, 255, 255, 0.05) !important;
 }
-nav.navbar .navbar-link {
+#mainNav .navbar-link {
   color: white !important;
 }
-nav.navbar .navbar-link:hover {
+#mainNav .navbar-link:hover {
   background: rgba(255, 255, 255, 0.05) !important;
 }
-nav.navbar .navbar-link:focus-within {
+#mainNav .navbar-link:focus-within {
   background: rgba(255, 255, 255, 0.05) !important;
 }
-nav.navbar .navbar-dropdown {
+#mainNav .navbar-dropdown {
   color: white !important;
   background-color: rgba(15, 30, 56, 0.8784313725) !important;
 }
-nav.navbar .navbar-dropdown:focus-within {
+#mainNav .navbar-dropdown:focus-within {
   background: rgba(255, 255, 255, 0.05) !important;
+}
+
+#guildNav {
+  background: #0c1421 !important;
+}
+#guildNav .nav-item a {
+  text-decoration: none !important;
+}
+#guildNav .nav-item a.active {
+  background: #182b4b !important;
+}
+#guildNav .nav-item:hover {
+  background: #182b4b !important;
+}
+
+#searchNav {
+  height: 50px;
 }
 
 ::-webkit-scrollbar {

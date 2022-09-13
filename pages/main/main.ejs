@@ -39,8 +39,8 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Class</th>
+                                <th scope="col" data-trans="wordName">Name</th>
+                                <th scope="col" data-trans="wordClass">Class</th>
                                 <th scope="col">Map</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -57,8 +57,8 @@
                                         <td><%= player.ClassName %></td>
                                         <td><%= player.MapName %></td>
                                         <td>
-                                            <a class="btn btn-primary text-decoration-none" href="/account/<%= player.UserId %>" data-navigo>See Account</a>
-                                            <a class="btn btn-primary text-decoration-none" href="/player/<%= player.Name %>" data-navigo>See character</a>
+                                            <a class="btn btn-primary text-decoration-none" href="/account/<%= player.UserId %>" data-navigo data-trans="seeAccount">See Account</a>
+                                            <a class="btn btn-primary text-decoration-none" href="/player/<%= player.Name %>" data-navigo data-trans="seeCharacter">See character</a>
                                         </td>
                                     </tr>
                                     <% }) %>

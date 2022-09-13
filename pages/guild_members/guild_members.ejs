@@ -1,6 +1,7 @@
 <section id="mainSection">
     <div class="row">
-        <div class="col-md-12 mt-5">
+        <div class="col-md-12">
+            
             <div class="card rounded-0 border-0">
                 <div class="card-header rounded-0">
                     <h5 class="card-title text-white text-center" id="username">
@@ -12,6 +13,18 @@
                         </li>
                     </h5>
                 </div>
+                <ul id="guildNav" class="nav justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" data-trans="wordMember" href="/guild/<%= guild.Id %>/pages/0" data-navigo>
+                            Members
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/guild/variables/<%= guild.Id %>" data-navigo>
+                            Variables
+                        </a>
+                    </li>
+                </ul>
                 <div class="card-body">
                     <div class="table-area">
                         <table class="table text-center">

@@ -1,5 +1,5 @@
 const Params = {
-    dev:false,
+    dev:true,
     portable:false
 }
 

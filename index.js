@@ -3,7 +3,10 @@ const { startRouter, goTo } = require('./router');
 const { ipcRenderer } = require('electron');
 const { StorageManager } = require("./Utils/StorageManager");
 const { TranslationManager } = require("./Utils/TranslationManager");
+const { ApiManager } = require("./Utils/ApiManager");
+
 const store = new StorageManager();
+const api = new ApiManager();
 const translate = new TranslationManager(store.getStorage("language"));
 
 window.onload = () => {
@@ -11,6 +14,7 @@ window.onload = () => {
     const miniApp = document.getElementById("miniApp");
     const closeApp = document.getElementById("closeApp");
     const backButton = document.getElementById("backButton");
+    const searchForm = document.getElementById("searchForm");
     let checkInterval = null;
 
     startRouter(content);
@@ -31,6 +35,28 @@ window.onload = () => {
         backButton.addEventListener("click", () => {
             goTo(localStorage.getItem("lastPage"));
         });
+    }
+
+    if(searchForm != null){
+        searchForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let formData = new FormData(searchForm);
+            let value = formData.get("search");
+
+            if(value != null){
+                const searchUser = await api.getUser(value);
+                if(searchUser.hasOwnProperty("Id")){
+                    searchForm.reset();
+                    return ipcRenderer.send("goTo", `account/${searchUser.Id}/`);
+                }else{
+                    const searchCharacter = await api.getPlayer(value);
+                    if(searchCharacter.hasOwnProperty("playerData") && searchCharacter.playerData.hasOwnProperty("Id")){
+                        searchForm.reset();
+                        return ipcRenderer.send("goTo", `player/${searchCharacter.playerData.Id}/`);
+                    }
+                }
+            }
+        })
     }
 
 

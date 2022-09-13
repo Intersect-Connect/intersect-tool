@@ -120,6 +120,10 @@ app.on('window-all-closed', function() {
     if (process.platform !== 'darwin') app.quit()
 })
 
+app.on("uncaughtException", (error) => {
+    console.log(error)
+})
+
 ipcMain.on("reduce_app", (event, arg) => {
     mainWindow.minimize();
 });

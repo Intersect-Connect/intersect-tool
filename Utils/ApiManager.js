@@ -41,13 +41,19 @@ class ApiManager {
         return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'GET',
             headers: headers,
+            mode : "cors"
         })
             .then(async (response) => {
                 if (response.status == 401) {
                     await this.reloadToken();
                     await this.get(apiRoute);
                 } else {
-                    return response.json()
+                    if (response.status == 404) {
+                        console.log("Ici", {"Message":"Not found"})
+                        return {"Message":"Not found"};
+                    }else{
+                        return response.json()
+                    }
                 }
             }).catch(error => {
                 return ipcRenderer.send("goTo", "/offline");
@@ -63,6 +69,7 @@ class ApiManager {
         return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'POST',
             headers: headers,
+            mode : "cors",
             body: JSON.stringify(formData)
         }).then(async (response) => {
             if (response.status == 401) {
@@ -136,7 +143,7 @@ class ApiManager {
     }
 
     async getUsersList(page = 0) {
-        const request = await this.getAuth(`/api/v1/users?page=${page}&pageSize=25`);
+        const request = await this.getAuth(`/api/v1/users?page=${page}&pageSize=${this.store.getStorage("pageSetting")}`);
         localStorage.setItem("accountsPages", page);
         return request;
     }
@@ -176,7 +183,7 @@ class ApiManager {
     }
 
     async getPlayersList(page = 0) {
-        const request = await this.getAuth(`/api/v1/players?page=${page}&pageSize=25`);
+        const request = await this.getAuth(`/api/v1/players?page=${page}&pageSize=${this.store.getStorage("pageSetting")}`);
         localStorage.setItem("playersPages", page);
         return request;
     }
@@ -299,27 +306,56 @@ class ApiManager {
     }
 
     async getUserLogs(user, page = 0) {
-        const request = await this.getAuth(`/api/v1/logs/user/${user}/activity?page=${page}&pageSize=25`);
+        const request = await this.getAuth(`/api/v1/logs/user/${user}/activity?page=${page}&pageSize=${this.store.getStorage("pageSetting")}`);
         return request;
     }
 
     async getGuildsList(page = 0) {
-        const request = await this.getAuth(`/api/v1/guilds?page=${page}&pageSize=25`);
+        const request = await this.getAuth(`/api/v1/guilds?page=${page}&pageSize=${this.store.getStorage("pageSetting")}`);
         return request;
     }
 
     async getGuild(id, page = 0) {
         const requestGuild = this.getAuth(`/api/v1/guilds/${id}`);
-        const requestGuildMember = this.getAuth(`/api/v1/guilds/${id}/members?page=${page}pageSize=25`);
-        const allData = await Promise.all([requestGuild, requestGuildMember]);
+        const requestGuildMember = this.getAuth(`/api/v1/guilds/${id}/members?page=${page}pageSize=${this.store.getStorage("pageSetting")}`);
+        const requestGuildVariable = this.getAuth(`/api/v1/guilds/${id}/variables`);
+        const allData = await Promise.all([requestGuild, requestGuildMember, requestGuildVariable]);
 
         const guild = {
             "guild": allData[0],
             "members": allData[1],
+            "variables": allData[2]
         }
 
         return guild;
-        
+    }
+
+    async getServerVariables(page = 0){
+        const formData = {
+            "page": page,
+            "count": 25,
+        }
+        const request = await this.postAuth(`/api/v1/variables/global`, formData);
+        console.log(request);
+        return request;
+    }
+
+    async setServerVariables(variableId, value){
+        const formData = {
+            "value": value,
+        }
+        const request = await this.postAuth(`/api/v1/variables/global/${variableId}`, formData);
+        console.log(request);
+        return request;
+    }
+
+    async setGuildVariables(guildId, variableId, value){
+        const formData = {
+            "value": value,
+        }
+        const request = await this.postAuth(`/api/v1/guilds/${guildId}/variables/${variableId}`, formData);
+        console.log(request);
+        return request;
     }
 }
 exports.ApiManager = ApiManager;

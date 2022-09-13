@@ -6,7 +6,9 @@ function renderMain(ejs, content, translateLib, apiLib, playersList, getServerSt
     api = apiLib;
     // const content = document.querySelector(".content");
     console.log('Load Main')
-    return fetch("./pages/main/main.ejs")
+    return fetch("./pages/main/main.ejs", {
+        mode: "cors"
+    })
         .then((response) => response.text())
         .then(async (mainHtml) => {
             content.innerHTML = ejs.render(mainHtml, { playersList, "stat": getServerStat, "uptime": timeago(getServerStat.uptime) });
@@ -67,6 +69,10 @@ function renderMain(ejs, content, translateLib, apiLib, playersList, getServerSt
                 // TODO pass in Date.now() and ms to check for 0 as never
                 return "never";
             }
+        })
+        .catch((error) => {
+            console.log("Error", error)
+            console.log(window.location.href="./test")
         });
 };
 
