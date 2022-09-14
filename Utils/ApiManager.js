@@ -1,4 +1,5 @@
 const http = require('https');
+const fetch = require('node-fetch');
 const { StorageManager } = require('./StorageManager');
 const { ipcRenderer } = require('electron');
 
@@ -79,7 +80,7 @@ class ApiManager {
                 return response.json()
             }
         }).catch(error => {
-            ipcRenderer.send("goTo", "/offline");
+            return false;
         });
     }
 
@@ -96,6 +97,8 @@ class ApiManager {
             headers: headers,
             body: formData.length != 0 ? JSON.stringify(formData) : null
         }).then(async (response) => {
+            console.log(response.status)
+
             if (response.status == 401) {
                 await this.reloadToken();
                 await this.get(apiRoute);

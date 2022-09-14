@@ -32,7 +32,7 @@
                 </div>
             </div>
         </nav>
-        <nav id="mainNav" class="navbar navbar-expand-lg bg-light">
+        <nav id="mainNav" class="navbar navbar-expand-lg bg-light d-none">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,19 +41,19 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav m-auto">
                         <li class="nav-item">
-                            <a class="nav-link  text-white" aria-current="page" href="/" data-navigo data-trans="menuHome">Home</a>
+                            <a class="nav-link  text-white" aria-current="page" href="/" data-navigo data-trans="menuHome"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/accounts" data-navigo data-trans="menuAccounts">Accounts list</a>
+                            <a class="nav-link text-white" href="/accounts" data-navigo data-trans="menuAccounts"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/players" data-navigo data-trans="menuPlayers">Players list</a>
+                            <a class="nav-link text-white" href="/players" data-navigo data-trans="menuPlayers"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/guilds" data-navigo data-trans="menuGuilds">Guilds list</a>
+                            <a class="nav-link text-white" href="/guilds" data-navigo data-trans="menuGuilds"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/variables" data-navigo data-trans="menuGlobalVariables">Global Variables list</a>
+                            <a class="nav-link text-white" href="/variables" data-navigo data-trans="menuGlobalVariables"></a>
                         </li>
                     </ul>
                     <ul class="navbar-nav m-auto">
@@ -67,7 +67,7 @@
                 </div>
             </div>
         </nav>
-        <nav id="searchNav" class="navbar navbar-expand-lg bg-transparent mt-2 mb-2">
+        <nav id="searchNav" class="navbar navbar-expand-lg bg-transparent mt-2 mb-2 d-none">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav m-auto">
@@ -82,6 +82,13 @@
             </div>
         </nav>
     </header>
+
+    <section id="loading" class="center-middle-fixed">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </section>
+    
     <div class="content container"></div>
     <script src="./assets/js/navigo.min.js"></script>
     <script src="./assets/js/uikit.min.js" defer></script>

@@ -3,13 +3,15 @@ const { app, BrowserWindow, screen, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { StorageManager } = require("./Utils/StorageManager");
 const { Params } = require("./Utils/Params");
+const { ApiManager } = require("./Utils/ApiManager");
 
 const store = new StorageManager();
+const api = new ApiManager();
 const path = require('path');
 let mainWindow = null;
 let splashScreen = null;
 
-function createWindow() {
+async function createWindow() {
     let width = null;
     let height = null;
 
@@ -34,10 +36,23 @@ function createWindow() {
         title: "Intersect Tools",
         show: false,
         backgroundColor: '#56cc5b10'
-    })
+    });
 
-    // and load the index.html of the app.
-    mainWindow.loadFile('index.html')
+    // if (store.storageExist("api_token")) {
+    //     if (await api.reloadToken()) {
+    //         // and load the index.html of the app.
+    //         mainWindow.loadFile('index.html');
+    //     } else {
+    //         // and load the index.html of the app.
+    //         mainWindow.loadFile('index.html');
+    //     }
+    // } else {
+    //     // and load the index.html of the app.
+    //     mainWindow.loadFile('index.html');
+    // }
+            mainWindow.loadFile('index.html');
+
+
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
@@ -104,7 +119,7 @@ app.whenReady().then(() => {
 
 
 
-    app.on('activate', function() {
+    app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0 && !Params.dev) splashScreen();
@@ -116,7 +131,7 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
 })
 
@@ -193,7 +208,7 @@ autoUpdater.on('update-available', () => {
     mainWindow.webContents.send("update_available");
 });
 
-autoUpdater.on("error", (event,args) => {
+autoUpdater.on("error", (event, args) => {
     mainWindow.webContents.send("restartError", { event, args });
 })
 

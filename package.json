@@ -1,6 +1,6 @@
 {
     "name": "intersect-tool",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Intersect Admin Tool for Intersect Engine",
     "main": "main.js",
     "scripts": {
@@ -24,12 +24,14 @@
         "electron-builder": "^23.3.3"
     },
     "dependencies": {
+        "axios": "^0.27.2",
         "bootstrap": "^5.2.1",
         "compression": "^1.7.4",
         "ejs": "^3.1.8",
         "electron-store": "^8.1.0",
         "electron-updater": "^5.2.1",
-        "navigo": "^8.11.1"
+        "navigo": "^8.11.1",
+        "node-fetch": "2.0"
     },
     "build": {
         "appId": "com.intersect-tool.thomasfdsapp",

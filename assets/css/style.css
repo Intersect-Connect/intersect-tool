@@ -74,7 +74,6 @@ nav.uk-navbar .uk-navbar-item {
 #mainNav {
   background: #0c1421 !important;
   color: white !important;
-  display: flex !important;
   border: 0px solid #cdcfeb;
   height: 50px;
 }

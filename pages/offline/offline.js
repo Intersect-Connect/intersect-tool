@@ -10,13 +10,17 @@ function renderOffline(content, ipcRendererLib, ElementManager, translateLib) {
     .then((response) => response.text())
     .then((updateHtml) => {
       content.innerHTML = updateHtml;
-      const installButton = document.getElementById("installButton");
-      const progressBar = document.getElementById("progress");
-      const downloadText = document.getElementById("downloadText");
-      const loadingDiv = document.getElementById("loadingDiv");
-
       translate.getTranslation();
+      console.log("mainNav", document.getElementById("searchNav"))
+      if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading") ) {
+        document.getElementById("mainNav").classList.add("d-none");
+        document.getElementById("searchNav").classList.add("d-none");
+        document.querySelector("#loading").classList.add("d-none");
+      } 
+
       //End of Javascript Content
+    }).catch(error => {
+      console.log("Error", error)
     });
 };
 
