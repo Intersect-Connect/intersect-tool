@@ -15,10 +15,11 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
             init(characterData, userData);
 
             function init(character, user) {
+                
                 content.innerHTML = ejs.render(mainHtml, {
                     "characterData": character.playerData,
-                    "inventory": character.inventory,
-                    "bank": character.bank,
+                    "inventory": empty(character.inventory),
+                    "bank": empty(character.bank),
                     "userData": user,
                     "displayNotification": displayNotification,
                     "notification": notification
@@ -282,6 +283,10 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                     }
 
                 }
+            }
+
+            function empty(data){
+                return data.filter((data) => data.ItemId != "00000000-0000-0000-0000-000000000000");
             }
         });
 };

@@ -1,6 +1,6 @@
 <section id="mainSection">
    <div class="row">
-        <div class="col-md-12 mt-5">
+        <div class="col-md-12">
             <div class="card rounded-0 border-0">
                 <div class="card-header rounded-0">
                     <h5 class="card-title text-white text-center" id="username"><%= characterData.Name %>@<%= userData.Name %></h5>
@@ -17,56 +17,10 @@
                             Admin actions, such as "Ban, Kick, Mute and Kill" currently do not work under version 0.7.1.47-beta (v0.7.1.47)
                         </div>
 
-                        <div class="col-md-6">
-                            <ul class="list-group">
-                                <h2 id="userId">
-                                    <a class="btn btn-primary text-decoration-none" href="account/<%= characterData.UserId %>" data-navigo data-trans="seeAccount">See account</a>
-                                </h2>                      
-                                <li class="list-group-item rounded-0">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-1">
-                                            <label for="hp">HP:</label>
-                                        </div>
-                                        <div class="col-md-11">
-                                            <div class="progress">
-                                                <div id="hp" class="progress-bar bg-success" role="progressbar" style="width: <%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%;" aria-valuenow="<%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item rounded-0">
-                                    <div class="row justify-content-center">
-        
-                                        <div class="col-md-1">
-                                            <label for="hp">MP:</label>
-                                        </div>
-                                        <div class="col-md-11">
-                                            <div class="progress">
-                                                <div id="mp" class="progress-bar bg-primary" role="progressbar" style="width: <%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%;" aria-valuenow="<%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item rounded-0">
-                                    <span id="level" data-trans="wordLevel">Level </span>: <%= characterData.Level %>
-                                </li>
-                                <li class="list-group-item rounded-0">
-                                    <span id="class" data-trans="wordClass">Class </span>: <%= characterData.ClassName %>
-                                </li>
-                                <li class="list-group-item rounded-0">
-                                    <% if (characterData.Online) { %>
-                                        <span class="text-success" data-trans="playerOnline">Player is online</span>
-                                    <% }else{ %>
-                                        <span class="text-danger" data-trans="playerOffline">Player is offline</span>
-                                    <% } %>
-                                </li>
-                            </ul>
-                        </div>
-    
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                 <li class="nav-item list-style-none" role="presentation">
-                                  <button class="nav-link active" id="pills-penalties-tab" data-bs-toggle="pill" data-bs-target="#pills-penalties" type="button" role="tab" aria-controls="pills-penalties" aria-selected="true" data-trans="wordPenalties">Penalties</button>
+                                  <button class="nav-link active" id="pills-character-tab" data-bs-toggle="pill" data-bs-target="#pills-character" type="button" role="tab" aria-controls="pills-character" aria-selected="true" data-trans="wordCharacterData">Character Data</button>
                                 </li>
                                 <li class="nav-item list-style-none" role="presentation">
                                   <button class="nav-link" id="pills-items-tab" data-bs-toggle="pill" data-bs-target="#pills-items" type="button" role="tab" aria-controls="pills-items" aria-selected="false" data-trans="wordItems">Items</button>
@@ -79,8 +33,56 @@
                                 </li>
                               </ul>
                               <div class="tab-content" id="pills-tabContent">
+                                <!-- Character Data -->
+                                <div class="tab-pane fade show active" id="pills-character" role="tabpanel" aria-labelledby="pills-character-tab" tabindex="0">
+                                    <ul class="list-group">
+                                        <h2 id="userId">
+                                            <a class="btn btn-primary text-decoration-none" href="account/<%= characterData.UserId %>" data-navigo data-trans="seeAccount">See account</a>
+                                        </h2>                      
+                                        <li class="list-group-item rounded-0">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-1">
+                                                    <label for="hp">HP:</label>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <div class="progress">
+                                                        <div id="hp" class="progress-bar bg-success" role="progressbar" style="width: <%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%;" aria-valuenow="<%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[0] * 100 / characterData.MaxVitals[0]%>%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item rounded-0">
+                                            <div class="row justify-content-center">
+                
+                                                <div class="col-md-1">
+                                                    <label for="hp">MP:</label>
+                                                </div>
+                                                <div class="col-md-11">
+                                                    <div class="progress">
+                                                        <div id="mp" class="progress-bar bg-primary" role="progressbar" style="width: <%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%;" aria-valuenow="<%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>" aria-valuemin="0" aria-valuemax="100"><%= characterData.Vitals[1] * 100 / characterData.MaxVitals[1]%>%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item rounded-0">
+                                            <span id="level" data-trans="wordLevel">Level </span>: <%= characterData.Level %>
+                                        </li>
+                                        <li class="list-group-item rounded-0">
+                                            <span id="class" data-trans="wordClass">Class </span>: <%= characterData.ClassName %>
+                                        </li>
+                                        <li class="list-group-item rounded-0">
+                                            <% if (characterData.Online) { %>
+                                                <span class="text-success" data-trans="playerOnline">Player is online</span>
+                                            <% }else{ %>
+                                                <span class="text-danger" data-trans="playerOffline">Player is offline</span>
+                                            <% } %>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- End Character Data -->
+                                </div>
                                 <!-- Penalities -->
-                                <div class="tab-pane fade show active" id="pills-penalties" role="tabpanel" aria-labelledby="pills-penalties-tab" tabindex="0">
+                                <div class="tab-pane fade" id="pills-penalties" role="tabpanel" aria-labelledby="pills-penalties-tab" tabindex="0">
                                     <form id="sanctionForm">
                                         <div class="mt-3 mb-3">
                                             <label for="duration" class="text-dark" data-trans="penaltiesDuration">Duration of the penalties</label>
@@ -148,6 +150,7 @@
                                 <!-- Bank -->
                                 <div class="tab-pane fade" id="pills-bank" role="tabpanel" aria-labelledby="pills-bank-tab" tabindex="0">
                                     <ul id="inventoryList" class="list-group">
+                                        <% if(bank.length != 0) { %>
                                         <% bank.forEach(function(item) { %>
                                             <% if(item.ItemName != "ERR_DELETED") { %>
                                             <li class="list-group-item">
@@ -155,6 +158,10 @@
                                             </li>
                                             <% } %>
                                         <% }) %>
+                                        <% }else{ %>
+                                            <div class="alert alert-info rounded-0" data-trans="noItemInBank">No items in bank</div>
+                                        <% } %>
+
                                     </ul>
                                 </div>
                                 <!-- End Bank -->

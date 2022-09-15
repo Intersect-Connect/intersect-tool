@@ -169,6 +169,7 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const userData = await api.getUser(characterData.playerData.UserId);
+                        console.log(characterData)
                         matomoStat('it://seeUser');
                         renderPlayer(ejs, content, translate, api, element, characterData, userData).then(router.updatePageLinks);
                     } else {
@@ -232,7 +233,7 @@ async function startRouter(content) {
                         }
                         const charactersData = await api.getUserCharacters(data.id);
                         matomoStat('it://seeAccount');
-                        renderAccount(ejs, content, translate, { user: userData, characters: charactersData }).then(router.updatePageLinks);
+                        renderAccount(ejs, content, translate, api, element, userData, charactersData).then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");

@@ -42,7 +42,7 @@ class ApiManager {
         return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'GET',
             headers: headers,
-            mode : "cors"
+            mode: "cors"
         })
             .then(async (response) => {
                 if (response.status == 401) {
@@ -50,9 +50,9 @@ class ApiManager {
                     await this.get(apiRoute);
                 } else {
                     if (response.status == 404) {
-                        console.log("Ici", {"Message":"Not found"})
-                        return {"Message":"Not found"};
-                    }else{
+                        console.log("Ici", { "Message": "Not found" })
+                        return { "Message": "Not found" };
+                    } else {
                         return response.json()
                     }
                 }
@@ -70,7 +70,7 @@ class ApiManager {
         return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'POST',
             headers: headers,
-            mode : "cors",
+            mode: "cors",
             body: JSON.stringify(formData)
         }).then(async (response) => {
             if (response.status == 401) {
@@ -293,12 +293,12 @@ class ApiManager {
         }
     }
 
-    async kick(playerId){
+    async kick(playerId) {
         const kickRequest = await this.postAuth(`/api/v1/players/${playerId}/admin/kick`, []);
         return kickRequest;
     }
 
-    async kill(playerId){
+    async kill(playerId) {
         const killRequest = await this.postAuth(`/api/v1/players/${playerId}/admin/kill`, []);
         return killRequest;
     }
@@ -333,7 +333,7 @@ class ApiManager {
         return guild;
     }
 
-    async getServerVariables(page = 0){
+    async getServerVariables(page = 0) {
         const formData = {
             "page": page,
             "count": 25,
@@ -343,7 +343,7 @@ class ApiManager {
         return request;
     }
 
-    async setServerVariables(variableId, value){
+    async setServerVariables(variableId, value) {
         const formData = {
             "value": value,
         }
@@ -352,7 +352,7 @@ class ApiManager {
         return request;
     }
 
-    async setGuildVariables(guildId, variableId, value){
+    async setGuildVariables(guildId, variableId, value) {
         const formData = {
             "value": value,
         }
@@ -361,8 +361,13 @@ class ApiManager {
         return request;
     }
 
-    async getRank(){
+    async getRank() {
         const request = await this.getAuth("/api/v1/players/rank?pageSize=100&sortDirection=Descending");
+        return request;
+    }
+
+    async sendResetPasswordEmail(userId) {
+        const request = await this.getAuth(`/api/v1/users/${userId}/password/reset`);
         console.log(request);
         return request;
     }

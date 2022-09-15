@@ -1,28 +1,34 @@
 <section id="mainSection">
     <div class="row">
-        <div class="col-md-12 mt-5">
+        <div class="col-md-12">
             <div class="card rounded-0 border-0">
                 <div class="card-header rounded-0">
-                    <h5 class="card-title text-white text-center" id="username"><%= data.user.Name %></h5>
+                    <h5 class="card-title text-white text-center" id="username"><%= user.Name %></h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
+                    <button type="button" class="btn btn-primary rounded-0" id="sendEmail" data-user="<%= user.Id %>">Send Reset Password Email</button>
+                    <% if (displayNotification) { %>
+                        <div class="col-12 mb-3 mt-3">
+                            <%- notification %>
+                        </div>
+                    <% } %>
+                    <ul class="list-group mt-3">
                         <li class="list-group-item">
-                            <span data-trans="wordUserId">User Id</span> :  <%= data.user.Id %>
+                            <span data-trans="wordUserId">User Id</span> :  <%= user.Id %>
                         </li>
                         <li class="list-group-item">
-                            Email: <%= data.user.Email %>
+                            Email: <%= user.Email %>
                         </li>
 
                         <li class="list-group-item">
                             Status :  
-                            <% if (data.user.isBanned) { %>
+                            <% if (user.isBanned) { %>
                                 <span data-trans="wordBanned">Banned</span>
                             <% } %>
-                            <% if (data.user.isMuted) { %>
+                            <% if (user.isMuted) { %>
                                 <span data-trans="wordMuted">Muted</span>
                             <% } %>
-                            <% if (!data.user.isMuted || !data.user.isBanned) { %>
+                            <% if (!user.isMuted || !user.isBanned) { %>
                                 Normal
                             <% } %>
                         </li>
@@ -43,9 +49,9 @@
                                     </tr>
                                 </thead>
                                 <tbody id="playersList">
-                                    <% data.characters.forEach(function(character) { %>
+                                    <% characters.forEach(function(character) { %>
                                     <tr>
-                                        <td><%= character.Name %>@<%= data.user.Name %></td>
+                                        <td><%= character.Name %>@<%= user.Name %></td>
                                         <td><%= character.ClassName %></td>
                                         <td><%= character.MapName %></td>
                                         <td>
