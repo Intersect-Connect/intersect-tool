@@ -14,6 +14,7 @@ function renderSettings(content, ipcRendererLib, translateLib, storeLib) {
       const languageSelect = document.getElementById("language");
       const settingForm = document.getElementById("settingForm");
       const pageSetting = document.getElementById("pageSetting");
+      const analyticsCheck = document.getElementById("analytics");
 
       if (settingForm != null) {
         settingForm.addEventListener("submit", (e) => {
@@ -23,6 +24,15 @@ function renderSettings(content, ipcRendererLib, translateLib, storeLib) {
           if (formData.get("pageSetting") != null) {
             store.setStorage("pageSetting", formData.get("pageSetting"));
             pageSetting.value = store.getStorage("pageSetting");
+          }
+          if (analyticsCheck != null) {
+            console.log(analyticsCheck.checked)
+            if(analyticsCheck.checked){
+              store.setStorage("allowAnalytic", true);
+            }else{
+              store.setStorage("allowAnalytic", false);
+            }
+            analyticsCheck.checked = store.getStorage("allowAnalytic");
           }
         })
       }
@@ -34,6 +44,12 @@ function renderSettings(content, ipcRendererLib, translateLib, storeLib) {
           store.setStorage("pageSetting", 25);
           pageSetting.value = store.getStorage("pageSetting");
         }
+      }
+
+      if (analyticsCheck != null) {
+        if (store.storageExist("allowAnalytic")) {
+          analyticsCheck.checked = store.getStorage("allowAnalytic");
+        } 
       }
 
 

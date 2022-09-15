@@ -10,9 +10,17 @@
   </div>
 <hr>
   <form id="settingForm">
+
     <div class="mt-3 mb-3">
       <label for="pageSetting" data-trans="itemByPage">Number of items to display per page</label>
       <input type="number" name="pageSetting" id="pageSetting" min="25" max="100" class="form-control rounded-0">
+    </div>
+
+    <div class="mt-3 mb-3">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="analytics" name="analytics">
+        <label class="form-check-label" for="analytics" data-trans="allowAnalytic">Allow analysis of your use of Intersect Tool</label>
+      </div>
     </div>
   
     <button type="submit" class="btn btn-primary rounded-0">Submit</button>

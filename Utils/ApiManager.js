@@ -360,5 +360,11 @@ class ApiManager {
         console.log(request);
         return request;
     }
+
+    async getRank(){
+        const request = await this.getAuth("/api/v1/players/rank?pageSize=100&sortDirection=Descending");
+        console.log(request);
+        return request;
+    }
 }
 exports.ApiManager = ApiManager;

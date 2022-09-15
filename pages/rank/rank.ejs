@@ -1,0 +1,59 @@
+<section id="mainSection">
+    <h1 class="d-none">
+        <a href="/" data-navigo>Frontend structure</a>
+    </h1>
+    <ul class="d-none">
+        <li><a href="/about" data-navigo>About</a></li>
+        <li><a href="/login" data-navigo>Getting data from a form</a></li>
+        <li><a href="/users" data-navigo>Users</a></li>
+        <li><a href="/update" data-navigo>Update</a></li>
+    </ul>
+
+    <div class="row">
+        <div class="col-md-12 mt-5">
+            <div class="card rounded-0 border-0">
+                <div class="card-header rounded-0">
+                    <h5 class="card-title text-white text-center" data-trans="RankTitle">Player ranking</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-area">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" data-trans="wordName">Name</th>
+                                    <th scope="col" data-trans="wordClass">Class</th>
+                                    <th scope="col" data-trans="wordLevel">Level</th>
+                                    <th scope="col">Exp</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="playersList">
+                                <% if(players.length != 0) { %>
+                                    <% players.forEach(function(player, index) { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= player.Name %></td>
+                                        <td><%= player.ClassName %></td>
+                                        <td><%= player.Level %></td>
+                                        <td><%= player.Exp %> / <%= player.ExperienceToNextLevel %></td>
+                                        <td>
+                                            <a class="btn btn-primary text-decoration-none" href="/player/<%= player.Name %>" data-navigo data-trans="seeCharacter">
+                                                See character
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                <% }else{ %>
+                                    <tr>
+                                        <td colspan="12">No Data</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

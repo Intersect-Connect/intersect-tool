@@ -1,5 +1,7 @@
 const Navigo = require('navigo');
 const ejs = require('ejs');
+const shell = require('electron').shell;
+const MatomoTracker = require('matomo-tracker');
 const { TranslationManager } = require("./Utils/TranslationManager");
 const { StorageManager } = require("./Utils/StorageManager");
 const { ApiManager } = require("./Utils/ApiManager");
@@ -23,8 +25,10 @@ const { renderOffline } = require('./pages/offline/offline.js');
 const { renderAccountLog } = require('./pages/accountLog/accountLog.js');
 const { renderMain } = require('./pages/main/main.js');
 const { renderPlayerList } = require('./pages/players/players.js');
+const { renderRank } = require('./pages/rank/rank.js');
 const { renderPlayer } = require('./pages/player/player.js');
 const { renderAbout } = require('./pages/about/about.js');
+const { renderSupport } = require('./pages/support/support.js');
 const { renderUser } = require('./pages/user/user.js');
 const { renderLogin } = require('./pages/login/login.js');
 const { renderUsers } = require('./pages/users/users.js');
@@ -33,6 +37,8 @@ const { renderSettings } = require('./pages/settings/settings.js');
 const { ipcRenderer } = require('electron');
 
 const router = new Navigo('/', { hash: true });
+const matomo = new MatomoTracker(12, 'https://analytics.thomasfds.fr/matomo.php');
+
 
 async function startRouter(content) {
 
@@ -95,8 +101,10 @@ async function startRouter(content) {
 
                         playerList = getOnlineList.entries;
                         serverStat = getServerStat;
+                        matomoStat('it://index');
                         renderMain(ejs, content, translate, api, playerList, serverStat).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
                 },
@@ -122,8 +130,10 @@ async function startRouter(content) {
                         } else {
                             players = [];
                         }
+                        matomoStat('it://playersList');
                         renderPlayerList(ejs, content, translate, api, ipcRenderer, players, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -143,8 +153,10 @@ async function startRouter(content) {
                         } else {
                             players = [];
                         }
+                        matomoStat('it://playersList/');
                         renderPlayerList(ejs, content, translate, api, ipcRenderer, players, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
                 },
@@ -157,8 +169,10 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const userData = await api.getUser(characterData.playerData.UserId);
+                        matomoStat('it://seeUser');
                         renderPlayer(ejs, content, translate, api, element, characterData, userData).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -178,8 +192,10 @@ async function startRouter(content) {
                         } else {
                             users = [];
                         }
+                        matomoStat('it://accountsList');
                         renderAccounts(ejs, content, translate, api, users, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -199,8 +215,10 @@ async function startRouter(content) {
                         } else {
                             users = [];
                         }
+                        matomoStat('it://accountsList');
                         renderAccounts(ejs, content, translate, api, users, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
                 },
@@ -213,8 +231,10 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const charactersData = await api.getUserCharacters(data.id);
+                        matomoStat('it://seeAccount');
                         renderAccount(ejs, content, translate, { user: userData, characters: charactersData }).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -229,8 +249,10 @@ async function startRouter(content) {
                         }
                         const pages = Math.round(userLog.Total / userLog.PageSize);
                         const logs = userLog.Values;
+                        matomoStat('it://seeAccountLog');
                         renderAccountLog(ejs, content, translate, ipcRenderer, logs, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -250,8 +272,10 @@ async function startRouter(content) {
                         } else {
                             guilds = [];
                         }
+                        matomoStat('it://guilds');
                         renderGuilds(ejs, content, translate, api, ipcRenderer, guilds, pages).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
 
@@ -271,6 +295,7 @@ async function startRouter(content) {
                         } else {
                             guilds = [];
                         }
+                        matomoStat('it://guilds');
                         renderGuilds(ejs, content, translate, api, ipcRenderer, guilds, pages).then(router.updatePageLinks);
                     } else {
                         return goTo("/offline");
@@ -284,8 +309,10 @@ async function startRouter(content) {
                             document.getElementById("searchNav").classList.remove("d-none");
                             document.querySelector("#loading").classList.add("d-none");
                         }
+                        matomoStat('it://guildMember');
                         renderGuildMembers(ejs, content, translate, api, ipcRenderer, element, requestGuild).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
                 },
@@ -297,8 +324,10 @@ async function startRouter(content) {
                             document.getElementById("searchNav").classList.remove("d-none");
                             document.querySelector("#loading").classList.add("d-none");
                         }
+                        matomoStat('it://guildVariable');
                         renderGuildVariables(ejs, content, translate, api, ipcRenderer, element, requestGuild).then(router.updatePageLinks);
                     } else {
+
                         return goTo("/offline");
                     }
                 },
@@ -313,6 +342,7 @@ async function startRouter(content) {
                         const pages = Math.round(requestVariables.Total / requestVariables.PageSize);
                         renderVariables(ejs, content, translate, api, ipcRenderer, element, requestVariables, pages).then(router.updatePageLinks);
                     } else {
+                        matomoStat('it://seeGlobalVariable');
                         return goTo("/offline");
                     }
 
@@ -326,6 +356,7 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const pages = Math.round(requestVariables.total / requestVariables.count);
+                        matomoStat('it://seeGlobalVariable');
                         renderVariables(ejs, content, translate, api, ipcRenderer, element, requestVariables, pages).then(router.updatePageLinks);
                     } else {
                         return goTo("/offline");
@@ -333,17 +364,60 @@ async function startRouter(content) {
 
                 },
                 about: () => {
+                    if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
+                        document.getElementById("mainNav").classList.remove("d-none");
+                        document.getElementById("searchNav").classList.remove("d-none");
+                        document.querySelector("#loading").classList.add("d-none");
+                    }
+                    matomoStat('it://about');
                     renderAbout(content, translate).then(router.updatePageLinks);
                 },
                 update: () => {
+                    if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
+                        document.getElementById("mainNav").classList.remove("d-none");
+                        document.getElementById("searchNav").classList.remove("d-none");
+                        document.querySelector("#loading").classList.add("d-none");
+                    }
+                    matomoStat('it://update');
                     renderUpdate(content, ipcRenderer, element, translate).then(router.updatePageLinks);
                 },
                 offline: () => {
+                    matomoStat('it://offline');
                     renderOffline(content, ipcRenderer, element, translate).then(router.updatePageLinks);
                 },
                 settings: () => {
                     content.innerHTML = "";
+                    if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
+                        document.getElementById("mainNav").classList.remove("d-none");
+                        document.getElementById("searchNav").classList.remove("d-none");
+                        document.querySelector("#loading").classList.add("d-none");
+                    }
+                    matomoStat('it://settings');
                     renderSettings(content, ipcRenderer, translate, store).then(router.updatePageLinks);
+                },
+                rank: async () => {
+                    const rankRequest = await api.getRank();
+                    if (rankRequest) {
+                        if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
+                            document.getElementById("mainNav").classList.remove("d-none");
+                            document.getElementById("searchNav").classList.remove("d-none");
+                            document.querySelector("#loading").classList.add("d-none");
+                        }
+                        matomoStat('it://rank');
+                        renderRank(ejs, content, translate, api, element, rankRequest).then(router.updatePageLinks);
+                    } else {
+                        matomoStat('it://offline');
+                        renderOffline(content, ipcRenderer, element, translate).then(router.updatePageLinks);
+                    }
+                },
+                support: () => {
+                    if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
+                        document.getElementById("mainNav").classList.remove("d-none");
+                        document.getElementById("searchNav").classList.remove("d-none");
+                        document.querySelector("#loading").classList.add("d-none");
+                    }
+                    matomoStat('it://support');
+                    renderSupport(content, translate, shell).then(router.updatePageLinks);;
                 },
                 login: () => {
                     renderLogin(content, translate, store, ipcRenderer, crypto, api).then(router.updatePageLinks);;
@@ -359,10 +433,23 @@ async function startRouter(content) {
                 console.log("Error not found")
             })
             .resolve();
+        matomo.on('error', function (err) {
+            console.log('error tracking request: ', err);
+        });
     } catch (error) {
         console.log(error)
     }
 
+}
+
+function matomoStat(url) {
+    if (store.storageExist("allowAnalytic") && store.getStorage("allowAnalytic")) {
+        matomo.track({
+            url: `it://${url}`,
+            _idts: store.getStorage("firstVisit"),
+            _viewts: store.getStorage("lastVisit")
+        });
+    }
 }
 
 function goTo(route) {

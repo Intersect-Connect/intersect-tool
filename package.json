@@ -1,6 +1,6 @@
 {
     "name": "intersect-tool",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Intersect Admin Tool for Intersect Engine",
     "main": "main.js",
     "scripts": {
@@ -30,6 +30,7 @@
         "ejs": "^3.1.8",
         "electron-store": "^8.1.0",
         "electron-updater": "^5.2.1",
+        "matomo-tracker": "^2.2.4",
         "navigo": "^8.11.1",
         "node-fetch": "2.0"
     },
@@ -86,6 +87,16 @@
         },
         "snap": {
             "artifactName": "${productName}.${ext}"
-        }
+        },
+        "protocols": [
+            {
+              "name": "it",
+              "role": "Viewer",
+              "schemes": [
+                "it",
+                "its"
+              ]
+            }
+          ]
     }
 }

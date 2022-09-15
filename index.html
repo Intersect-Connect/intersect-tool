@@ -11,7 +11,8 @@
         <nav class="uk-navbar-container uk-margin uk-navbar" uk-navbar>
             <div class="uk-navbar-left">
                 <div class="uk-navbar-item">
-                    <a id="backButton" class="d-none navbar-item is-uppercase text-white uk-text-decoration-none bg-transparent">
+                    <a id="backButton"
+                        class="d-none navbar-item is-uppercase text-white uk-text-decoration-none bg-transparent">
                         <i class="fas fa-angle-left fa-2x me-2"></i> Retour
                     </a>
                 </div>
@@ -27,27 +28,34 @@
             </div>
             <div class="uk-navbar-right">
                 <div class="uk-navbar-item">
-                    <span id="miniApp" class="uk-button uk-button-secondary uk-icon uk-margin-small-right p-2" uk-icon="icon: minus"></span>
-                    <span id="closeApp" class="uk-button uk-button-danger uk-icon uk-margin-small-right border-0 p-2" uk-icon="icon: close"></span>
+                    <span id="miniApp" class="uk-button uk-button-secondary uk-icon uk-margin-small-right p-2"
+                        uk-icon="icon: minus"></span>
+                    <span id="closeApp" class="uk-button uk-button-danger uk-icon uk-margin-small-right border-0 p-2"
+                        uk-icon="icon: close"></span>
                 </div>
             </div>
         </nav>
         <nav id="mainNav" class="navbar navbar-expand-lg bg-light d-none">
             <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav m-auto">
                         <li class="nav-item">
-                            <a class="nav-link  text-white" aria-current="page" href="/" data-navigo data-trans="menuHome"></a>
+                            <a class="nav-link  text-white" aria-current="page" href="/" data-navigo
+                                data-trans="menuHome"></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/accounts" data-navigo data-trans="menuAccounts"></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/players" data-navigo data-trans="menuPlayers"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/rank" data-navigo data-trans="menuRank"></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/guilds" data-navigo data-trans="menuGuilds"></a>
@@ -63,6 +71,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/settings" data-navigo data-trans="menuSetting">Settings</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/support" data-navigo data-trans="supportUs">Support Us</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -73,9 +84,10 @@
                     <ul class="navbar-nav m-auto">
                         <li class="nav-item mt-3">
                             <form id="searchForm" class="d-flex" role="search">
-                                <input style="width: 15rem;" class="form-control rounded-0" name="search" type="search" placeholder="Search user or character" aria-label="Search">
+                                <input style="width: 15rem;" class="form-control rounded-0" name="search" type="search"
+                                    placeholder="Search user or character" aria-label="Search">
                                 <button class="btn btn-success rounded-0" type="submit">Search</button>
-                              </form>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -88,7 +100,11 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </section>
-    
+    <!-- Matomo Image Tracker-->
+    <img referrerpolicy="no-referrer-when-downgrade" src="https://analytics.thomasfds.fr/matomo.php?idsite=12&amp;rec=1"
+        style="border:0" alt="" />
+    <!-- End Matomo -->
+
     <div class="content container"></div>
     <script src="./assets/js/navigo.min.js"></script>
     <script src="./assets/js/uikit.min.js" defer></script>

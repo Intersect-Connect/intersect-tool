@@ -58,8 +58,30 @@ async function createWindow() {
         mainWindow.show();
         mainWindow.center();
 
+        /**
+         * Si le language par défaut n'est pas définit
+         */
         if (!store.storageExist("language")) {
+            // On le set par défaut sur anglais.
             store.setStorage("language", "en");
+        }
+
+        /**
+         * Si la première visite n'a pas encore été enregistré alors on l'enregistre
+         */
+        if (!store.storageExist("firstVisit")) {
+            store.setStorage("firstVisit", Math.floor(Date.now() / 1000));
+        }
+
+        /**
+         * Si la première visite existe, alors on set la dernière visite
+         */
+        if (store.storageExist("firstVisit")) {
+            store.setStorage("lastVisit", Math.floor(Date.now() / 1000));
+        }
+
+        if (!store.storageExist("allowAnalytic")) {
+            store.setStorage("allowAnalytic", true);
         }
 
         if (Params.dev) {
