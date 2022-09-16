@@ -12,17 +12,23 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
             let displayNotification = false;
             let notification = null;
 
+            if (localStorage.getItem("previewsPlayerTab") === null) {
+                localStorage.setItem("previewsPlayerTab", "characterData")
+            }
+
+            console.log("previewsPlayerTab", localStorage.getItem("previewsPlayerTab"))
             init(characterData, userData);
 
             function init(character, user) {
-                
+                console.log(localStorage.getItem("previewsPlayerTab") == "inventaire" ? localStorage.getItem("previewsPlayerTab") : null)
                 content.innerHTML = ejs.render(mainHtml, {
                     "characterData": character.playerData,
                     "inventory": empty(character.inventory),
                     "bank": empty(character.bank),
                     "userData": user,
                     "displayNotification": displayNotification,
-                    "notification": notification
+                    "notification": notification,
+                    "previousTab": localStorage.getItem("previewsPlayerTab") == "inventaire" ? localStorage.getItem("previewsPlayerTab") : null
                 });
 
                 const banButton = document.getElementById("banButton")
@@ -33,6 +39,72 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                 const takeButton = document.getElementById("takeButton");
                 const kickButton = document.getElementById("kickButton");
                 const killButton = document.getElementById("killButton");
+                const itemsForm = document.querySelectorAll(".itemsForm");
+                const characterTab = document.getElementById("pills-character-tab");
+                const penaltiesTab = document.getElementById("pills-penalties-tab");
+                const itemsTab = document.getElementById("pills-items-tab");
+                const inventoryTab = document.getElementById("pills-inventaire-tab");
+                const bankTab = document.getElementById("pills-bank-tab");
+                console.log(characterTab, penaltiesTab, itemsTab, inventoryTab, bankTab);
+
+                if (characterTab) {
+                    characterTab.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        localStorage.setItem("previewsPlayerTab", "characterData");
+                    })
+                }
+
+                if (penaltiesTab) {
+                    penaltiesTab.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        localStorage.setItem("previewsPlayerTab", "penalties");
+                    })
+                }
+
+                if (itemsTab) {
+                    itemsTab.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        localStorage.setItem("previewsPlayerTab", "items");
+                    })
+                }
+
+                if (inventoryTab) {
+                    inventoryTab.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        localStorage.setItem("previewsPlayerTab", "inventaire");
+                    })
+                }
+
+
+                if (bankTab) {
+                    bankTab.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        localStorage.setItem("previewsPlayerTab", "bank");
+                    })
+                }
+
+                if (itemsForm) {
+                    itemsForm.forEach((form) => {
+                        form.addEventListener("submit", async (e) => {
+                            e.preventDefault();
+                            const formData = new FormData(form);
+                            let itemId = e.target.dataset.item;
+                            let submit_type = e.submitter.value;
+                            let quantity = formData.get("quantity");
+                            console.log("ItemId", itemId);
+                            console.log("Submit Type", submit_type);
+                            console.log("Quantity", formData.get("quantity"));
+
+                            if (submit_type == "give") {
+                                giveItem(e, itemId, quantity);
+                            }
+
+                            if (submit_type == "take") {
+                                takeItem(e, itemId, quantity);
+                            }
+                        })
+                    });
+                }
 
                 if (banButton) {
                     banButton.addEventListener("click", ban)
@@ -62,7 +134,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                     kickButton.addEventListener("click", kick);
                 }
 
-                if(killButton){
+                if (killButton) {
                     killButton.addEventListener("click", kill);
                 }
                 translation.getTranslation();
@@ -74,6 +146,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @returns 
              */
             async function ban() {
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 const formData = new FormData(document.getElementById("sanctionForm"));
 
                 let duration = formData.get("duration");
@@ -105,6 +178,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @returns 
              */
             async function unban() {
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 const unbanRequest = await api.unBan(characterData.playerData.Name);
                 if (unbanRequest) {
                     await reloadPlayerData();
@@ -124,6 +198,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @returns 
              */
             async function mute() {
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 const formData = new FormData(document.getElementById("sanctionForm"));
 
                 let duration = formData.get("duration");
@@ -158,6 +233,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @returns 
              */
             async function unmute() {
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 const unbanRequest = await api.unMute(characterData.playerData.Name);
                 if (unbanRequest) {
                     await reloadPlayerData();
@@ -177,12 +253,22 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @param {*} e 
              * @returns 
              */
-            async function giveItem(e) {
+            async function giveItem(e, item, quant) {
                 e.preventDefault();
                 const formData = new FormData(document.getElementById("giveItem"));
 
-                let itemId = formData.get("itemId");
-                let quantity = formData.get("quantity");
+                let itemId = null;
+                let quantity = null;
+
+                if (item == null && quant == null) {
+                    itemId = formData.get("itemId");
+                    quantity = formData.get("quantity");
+                    localStorage.setItem("previewsPlayerTab", "characterData")
+                } else {
+                    itemId = item;
+                    quantity = quant;
+                    localStorage.setItem("previewsPlayerTab", "inventaire");
+                }
 
                 if (itemId != null && quantity != 0) {
                     console.log(characterData)
@@ -210,13 +296,21 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              * @param {*} e 
              * @returns 
              */
-            async function takeItem(e) {
+            async function takeItem(e, item = null, quant = null) {
                 e.preventDefault();
                 const formData = new FormData(document.getElementById("giveItem"));
+                let itemId = null;
+                let quantity = null;
 
-                let itemId = formData.get("itemId");
-                let quantity = formData.get("quantity");
-                console.log(characterData)
+                if (item == null && quant == null) {
+                    itemId = formData.get("itemId");
+                    quantity = formData.get("quantity");
+                    localStorage.setItem("previewsPlayerTab", "characterData")
+                } else {
+                    itemId = item;
+                    quantity = quant;
+                    localStorage.setItem("previewsPlayerTab", "inventaire");
+                }
 
                 if (itemId != null && quantity != 0) {
                     const takeRequest = await api.takeItem(characterData.playerData.Name, itemId, quantity);
@@ -245,6 +339,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
 
             async function kick(e) {
                 e.preventDefault();
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 const kickRequest = await api.kick(characterData.playerData.Name);
                 if (kickRequest.hasOwnProperty("Message") && kickRequest.Message != `${characterData.playerData.Name} has been kicked by the server!`) {
                     displayNotification = true;
@@ -267,6 +362,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
             async function kill(e) {
                 e.preventDefault();
                 const killRequest = await api.kill(characterData.playerData.Name);
+                localStorage.setItem("previewsPlayerTab", "characterData")
                 if (killRequest.hasOwnProperty("Message") && killRequest.Message != `${characterData.playerData.Name} has been killed!`) {
                     displayNotification = true;
                     notification = element.alertInfo(killRequest.Message);
@@ -285,7 +381,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                 }
             }
 
-            function empty(data){
+            function empty(data) {
                 return data.filter((data) => data.ItemId != "00000000-0000-0000-0000-000000000000");
             }
         });

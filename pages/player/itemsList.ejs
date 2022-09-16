@@ -1,0 +1,9 @@
+<ul id="inventoryList" class="list-group">
+    <% inventory.forEach(function(item) { %>
+        <% if(item.ItemName != "ERR_DELETED") { %>
+        <li class="list-group-item">
+            <%= item.ItemName %> (<%= item.Quantity %>)
+        </li>
+        <% } %>
+    <% }) %>
+</ul>

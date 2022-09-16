@@ -229,7 +229,9 @@ class ApiManager {
             "itemid": itemId,
             "quantity": quantity,
         }
+        console.log(formData)
         const request = await this.postAuth(`/api/v1/players/${user}/items/take`, formData);
+        console.log(request);
         if (request.hasOwnProperty("ItemId")) {
             return true;
         } else {

@@ -29,7 +29,7 @@ async function createWindow() {
             devTools: Params.dev ? true : false,
         },
         autoHideMenuBar: true,
-        maximizable: false,
+        maximizable: true,
         minimizable: false,
         center: true,
         frame: false,

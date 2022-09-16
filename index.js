@@ -1,6 +1,7 @@
 // import startRouter from "./router.js";
 const { startRouter, goTo } = require('./router');
 const { ipcRenderer } = require('electron');
+// const {bootstrap} = require("bootstrap");
 const { StorageManager } = require("./Utils/StorageManager");
 const { TranslationManager } = require("./Utils/TranslationManager");
 const { ApiManager } = require("./Utils/ApiManager");
@@ -15,6 +16,8 @@ window.onload = () => {
     const closeApp = document.getElementById("closeApp");
     const backButton = document.getElementById("backButton");
     const searchForm = document.getElementById("searchForm");
+    const toastElList = document.querySelectorAll('.toast')
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, option))
     let checkInterval = null;
 
     startRouter(content);

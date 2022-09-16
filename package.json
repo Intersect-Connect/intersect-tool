@@ -90,13 +90,13 @@
         },
         "protocols": [
             {
-              "name": "it",
-              "role": "Viewer",
-              "schemes": [
-                "it",
-                "its"
-              ]
+                "name": "it",
+                "role": "Viewer",
+                "schemes": [
+                    "it",
+                    "its"
+                ]
             }
-          ]
+        ]
     }
 }

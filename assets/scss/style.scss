@@ -141,11 +141,18 @@ nav.uk-navbar {
     }
 }
 
-#guildNav {
+#guildNav, .playerNav {
     background: #0c1421 !important;
 
-    .nav-item {
+    .nav-item,.nav-link {
         a {
+            text-decoration: none !important;
+            &.active{
+                background: #182b4b !important;
+            }
+        }
+
+        button {
             text-decoration: none !important;
             &.active{
                 background: #182b4b !important;
@@ -209,4 +216,9 @@ nav.uk-navbar {
     min-height: 200px;
     height: 370px;
     overflow-x: auto;
+}
+
+.toast{
+    top: 7rem!important;
+    right: 0rem!important;
 }

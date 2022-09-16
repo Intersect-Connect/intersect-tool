@@ -132,16 +132,22 @@ nav.uk-navbar .uk-navbar-item {
   background: rgba(255, 255, 255, 0.05) !important;
 }
 
-#guildNav {
+#guildNav, .playerNav {
   background: #0c1421 !important;
 }
-#guildNav .nav-item a {
+#guildNav .nav-item a, #guildNav .nav-link a, .playerNav .nav-item a, .playerNav .nav-link a {
   text-decoration: none !important;
 }
-#guildNav .nav-item a.active {
+#guildNav .nav-item a.active, #guildNav .nav-link a.active, .playerNav .nav-item a.active, .playerNav .nav-link a.active {
   background: #182b4b !important;
 }
-#guildNav .nav-item:hover {
+#guildNav .nav-item button, #guildNav .nav-link button, .playerNav .nav-item button, .playerNav .nav-link button {
+  text-decoration: none !important;
+}
+#guildNav .nav-item button.active, #guildNav .nav-link button.active, .playerNav .nav-item button.active, .playerNav .nav-link button.active {
+  background: #182b4b !important;
+}
+#guildNav .nav-item:hover, #guildNav .nav-link:hover, .playerNav .nav-item:hover, .playerNav .nav-link:hover {
   background: #182b4b !important;
 }
 
@@ -195,4 +201,9 @@ nav.uk-navbar .uk-navbar-item {
   min-height: 200px;
   height: 370px;
   overflow-x: auto;
+}
+
+.toast {
+  top: 7rem !important;
+  right: 0rem !important;
 }

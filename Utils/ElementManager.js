@@ -1,3 +1,5 @@
+const { Toast } = require("bootstrap");
+
 class ElementManager {
     constructor() {
 
@@ -35,37 +37,38 @@ class ElementManager {
         return el.innerText = message;
     }
 
-    classAdd(el, className){
+    classAdd(el, className) {
         return el.classList.add(className)
     }
 
-    classRemove(el, className){
+    classRemove(el, className) {
         return el.classList.remove(className)
     }
 
-    style(el, value){
+    style(el, value) {
         return el.style = value;
     }
 
-    href(el, value){
+    href(el, value) {
         return el.href = value;
     }
 
-    alertSuccess(message){
+    alertSuccess(message) {
+
         return `<div class="alert alert-success alert-dismissible fade show" role="alert">
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>`
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`
     }
 
-    alertInfo(message){
+    alertInfo(message) {
         return `<div class="alert alert-info alert-dismissible fade show" role="alert">
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>`
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>`
     }
 
-    alertError(message){
+    alertError(message) {
         return `<div class="alert alert-danger alert-dismissible fade show" role="alert">
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
