@@ -13,39 +13,53 @@ class ApiManager {
         this.server_url = null;
         this.accountUsername = null;
         this.accountPassword = null;
+    }
 
-        const checkLogin = async () => {
+
+    async checkLogin() {
+        if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
             const requestCheckLogin = await this.request.checkLogin();
 
             if (requestCheckLogin.Success) {
+                console.log("User Logged");
                 const getData = await this.getServerData();
                 if (getData.Success) {
-                    this.server_url = getData.ServerUrl;
-                    this.accountUsername = getData.AccountUsername;
-                    this.accountPassword = getData.AccountPassword;
+                    this.setServerUrl(getData.ServerUrl);
+                    this.setUsername(getData.AccountUsername);
+                    this.setPassword(getData.AccountPassword);
                 }
             }
-        }
-
-        if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
-            console.log("Logged");
-            checkLogin();
-        }else{
-            this.server_url = this.store.getStorage("server_url");
-            this.accountUsername = this.store.getStorage("accountUsername");
-            this.accountPassword = this.store.getStorage("accountPassword");
+        } else {
+            this.setServerUrl(this.store.getStorage("server_url"));
+            this.setUsername(this.store.getStorage("accountUsername"));
+            this.setPassword(this.store.getStorage("accountPassword"));
         }
     }
 
-    getServerUrl(){
+    setServerUrl(server) {
+        this.server_url = server;
         return this.server_url;
     }
 
-    getUsername(){
+    setUsername(username) {
+        this.accountUsername = username;
         return this.accountUsername;
     }
 
-    getPassword(){
+    setPassword(password) {
+        this.accountPassword = password;
+        return this.accountPassword;
+    }
+
+    getServerUrl() {
+        return this.server_url;
+    }
+
+    getUsername() {
+        return this.accountUsername;
+    }
+
+    getPassword() {
         return this.accountPassword;
     }
 
@@ -63,11 +77,12 @@ class ApiManager {
             'Content-Type': 'application/json'
         };
 
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        return await fetch(this.getServerUrl() + apiRoute, {
             method: 'GET',
             headers: headers,
         })
             .then(async (response) => {
+                console.log("get:", response.status, " Route:", apiRoute);
                 if (response.status == 401) {
                     await this.reloadToken();
                     await this.get(apiRoute);
@@ -86,13 +101,14 @@ class ApiManager {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.store.getStorage("api_token")}`,
         };
-        console.log("GetAuth", this.getServerUrl() + apiRoute)
         return await fetch(this.server_url + apiRoute, {
             method: 'GET',
             headers: headers,
             mode: "cors"
         })
             .then(async (response) => {
+                console.log("getAuth:", response.status, " Route:", apiRoute);
+
                 if (response.status == 401) {
                     await this.reloadToken();
                     await this.get(apiRoute);
@@ -120,6 +136,7 @@ class ApiManager {
             mode: "cors",
             body: JSON.stringify(formData)
         }).then(async (response) => {
+            console.log("post:", response.status, " Route:", apiRoute);
             if (response.status == 401) {
                 await this.reloadToken();
                 await this.get(apiRoute);
@@ -144,6 +161,7 @@ class ApiManager {
             headers: headers,
             body: formData.length != 0 ? JSON.stringify(formData) : null
         }).then(async (response) => {
+            console.log("postAuth:", response.status, " Route:", apiRoute);
             if (response.status == 401) {
                 await this.reloadToken();
                 await this.get(apiRoute);
@@ -160,16 +178,18 @@ class ApiManager {
         if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
             formData = {
                 "grant_type": "password",
-                "username": this.store.getStorage("accountUsername"),
-                "password": this.store.getStorage("accountPassword"),
+                "username": this.getUsername(),
+                "password": this.getPassword(),
             }
         } else {
             formData = {
                 "grant_type": "password",
-                "username": this.store.getStorage("accountUsername"),
-                "password": this.store.getStorage("accountPassword"),
+                "username": this.getUsername(),
+                "password": this.getPassword(),
             }
         }
+
+        console.log("FormData", formData)
 
 
         return await this.post("/api/oauth/token", formData);
@@ -177,6 +197,7 @@ class ApiManager {
 
     async reloadToken() {
         const authTokenRequest = await this.tokenAuth();
+        console.log("authTokenRequest", authTokenRequest)
         if (authTokenRequest.access_token) {
             this.store.setStorage("api_token", authTokenRequest.access_token);
             return true;

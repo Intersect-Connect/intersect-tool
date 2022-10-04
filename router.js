@@ -13,7 +13,6 @@ const crypto = require('crypto');
 const store = new StorageManager();
 const translate = new TranslationManager();
 const element = new ElementManager();
-const api = new ApiManager();
 
 const { renderInstall } = require('./pages/install/install.js');
 const { renderGetToken } = require('./pages/getToken/getToken.js');
@@ -43,6 +42,9 @@ const matomo = new MatomoTracker(12, 'https://analytics.thomasfds.fr/matomo.php'
 
 
 async function startRouter(content) {
+    const api = new ApiManager();
+    await api.checkLogin();
+
     console.log("Computer Name", os.hostname())
     console.log(os.networkInterfaces())
 
@@ -72,7 +74,9 @@ async function startRouter(content) {
                     store.setStorage("pageSetting", 25);
                 }
                 if (store.storageExist("api_token")) {
-                    if (await api.reloadToken()) {
+                    const reloadTokenRequest = await api.reloadToken();
+                    console.log("reloadTokenRequest", reloadTokenRequest)
+                    if (reloadTokenRequest) {
                         router.navigate("/");
 
                     } else {

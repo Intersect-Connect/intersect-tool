@@ -9,7 +9,6 @@ class TranslationManager {
 
     getTranslation() {
         this.language = this.store.getStorage("language");
-        console.log("lang", this.language);
         if (this.language == "fr") {
             this.translation = {
                 menuHome:"Accueil",
@@ -124,6 +123,11 @@ class TranslationManager {
                 offlineDesc:"The game server is down, please try again later.",
                 SettingsTitle: "App settings",
                 settingChooseLanguage: "Choose a language",
+                IntersectConnectLoginTitle: "Log in with Intersect Connect",
+                IntersectConnectTitle:"Register online",
+                IntersectConnectSaveInfo:"<p>Register online, allows you to access Intersect Tools anywhere, at the moment it is not yet possible to connect to the initialization of the application, it will be available in the next update.</p><p>This feature will make it easier to use the Android version of Intersect Tools.</p><p>This procedure saves online, the ip, the port of your server game, the name of the api account and its password.</p>",
+                IntersectConnectSaveButton:"Save",
+                IntersectConnectServerId: "Your server id is ",
                 updateTitle: "App update",
                 updateText: "An update is available, the download is in progress.",
                 updateInstallButton: "Install the update",
