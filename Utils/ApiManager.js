@@ -1,13 +1,60 @@
 const http = require('https');
 const fetch = require('node-fetch');
 const { StorageManager } = require('./StorageManager');
+const { RequestsManager } = require('./RequestsManager');
+
 const { ipcRenderer } = require('electron');
 
 class ApiManager {
 
     constructor() {
         this.store = new StorageManager();
+        this.request = new RequestsManager();
+        this.server_url = null;
+        this.accountUsername = null;
+        this.accountPassword = null;
+
+        const checkLogin = async () => {
+            const requestCheckLogin = await this.request.checkLogin();
+
+            if (requestCheckLogin.Success) {
+                const getData = await this.getServerData();
+                if (getData.Success) {
+                    this.server_url = getData.ServerUrl;
+                    this.accountUsername = getData.AccountUsername;
+                    this.accountPassword = getData.AccountPassword;
+                }
+            }
+        }
+
+        if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
+            console.log("Logged");
+            checkLogin();
+        }else{
+            this.server_url = this.store.getStorage("server_url");
+            this.accountUsername = this.store.getStorage("accountUsername");
+            this.accountPassword = this.store.getStorage("accountPassword");
+        }
     }
+
+    getServerUrl(){
+        return this.server_url;
+    }
+
+    getUsername(){
+        return this.accountUsername;
+    }
+
+    getPassword(){
+        return this.accountPassword;
+    }
+
+    async getServerData() {
+        const formData = new FormData();
+        formData.append("Token", this.store.getStorage("UserToken"));
+        return await this.request.post("/v1/server/" + this.store.getStorage("ServerId"), formData)
+    }
+
 
     async get(apiRoute, token) {
 
@@ -39,7 +86,8 @@ class ApiManager {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.store.getStorage("api_token")}`,
         };
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        console.log("GetAuth", this.getServerUrl() + apiRoute)
+        return await fetch(this.server_url + apiRoute, {
             method: 'GET',
             headers: headers,
             mode: "cors"
@@ -50,7 +98,6 @@ class ApiManager {
                     await this.get(apiRoute);
                 } else {
                     if (response.status == 404) {
-                        console.log("Ici", { "Message": "Not found" })
                         return { "Message": "Not found" };
                     } else {
                         return response.json()
@@ -67,7 +114,7 @@ class ApiManager {
             'Content-Type': 'application/json'
         };
 
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        return await fetch(this.getServerUrl() + apiRoute, {
             method: 'POST',
             headers: headers,
             mode: "cors",
@@ -92,13 +139,11 @@ class ApiManager {
         };
 
 
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        return await fetch(this.getServerUrl() + apiRoute, {
             method: 'POST',
             headers: headers,
             body: formData.length != 0 ? JSON.stringify(formData) : null
         }).then(async (response) => {
-            console.log(response.status)
-
             if (response.status == 401) {
                 await this.reloadToken();
                 await this.get(apiRoute);
@@ -111,11 +156,21 @@ class ApiManager {
     }
 
     async tokenAuth() {
-        const formData = {
-            "grant_type": "password",
-            "username": this.store.getStorage("accountUsername"),
-            "password": this.store.getStorage("accountPassword"),
+        let formData = null;
+        if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
+            formData = {
+                "grant_type": "password",
+                "username": this.store.getStorage("accountUsername"),
+                "password": this.store.getStorage("accountPassword"),
+            }
+        } else {
+            formData = {
+                "grant_type": "password",
+                "username": this.store.getStorage("accountUsername"),
+                "password": this.store.getStorage("accountPassword"),
+            }
         }
+
 
         return await this.post("/api/oauth/token", formData);
     }
@@ -152,6 +207,7 @@ class ApiManager {
     }
 
     async getUser(username) {
+        console.log("Username", username)
         const request = await this.getAuth(`/api/v1/users/${username}/`);
         return request;
     }
@@ -229,9 +285,7 @@ class ApiManager {
             "itemid": itemId,
             "quantity": quantity,
         }
-        console.log(formData)
         const request = await this.postAuth(`/api/v1/players/${user}/items/take`, formData);
-        console.log(request);
         if (request.hasOwnProperty("ItemId")) {
             return true;
         } else {
@@ -240,13 +294,14 @@ class ApiManager {
     }
 
     async ban(userId, duration, reason) {
+        console.log(userId)
         const formData = {
             "duration": duration,
             "reason": reason,
             "moderator": "Moderation Tools",
             "ip": true
         }
-        const request = await this.postAuth(`/api/v1/players/${userId}/admin/ban`, formData);
+        const request = await this.postAuth(`/api/v1/users/${userId}/admin/ban`, formData);
         const getUser = await this.getUser(userId);
         if (request.Message === `${getUser.Name} has been banned!`) {
             return true;
@@ -256,7 +311,7 @@ class ApiManager {
     }
 
     async unBan(userId) {
-        const request = await this.postAuth(`/api/v1/players/${userId}/admin/unban`, []);
+        const request = await this.postAuth(`/api/v1/users/${userId}/admin/unban`, []);
         const getUser = await this.getUser(userId);
         if (request.Message == `${getUser.Name} has been unbanned!`) {
             return true;
@@ -274,6 +329,7 @@ class ApiManager {
         }
         const request = await this.postAuth(`/api/v1/users/${userId}/admin/mute`, formData);
         const getUser = await this.getUser(userId);
+
         if (request.Message === `${getUser.Name} has been muted!`) {
             return true;
         } else {
@@ -282,10 +338,10 @@ class ApiManager {
     }
 
     async unMute(userId) {
-        const request = await this.postAuth(`/api/v1/players/${userId}/admin/unmute`, []);
-        // const getUser = await this.getUser(userId);
+        const request = await this.postAuth(`/api/v1/users/${userId}/admin/unmute`, []);
+        const getUser = await this.getUser(userId);
         if (request.hasOwnProperty("Message")) {
-            if (request.Message === `${userId} has been unmuted!`) {
+            if (request.Message === `${getUser.Name} has been unmuted!`) {
                 return true;
             } else {
                 return false;

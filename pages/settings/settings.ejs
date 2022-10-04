@@ -1,0 +1,91 @@
+<section id="UpdatePage">
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="card rounded-0 border-0">
+        <div class="card-header text-center rounded-0 border-0">
+          <h5 class="card-title text-white text-center text-uppercase" data-trans="SettingsTitle"></h5>
+        </div>
+        <div class="card-body">
+          <div class="mt-3 mb-3">
+            <select name="language" id="language" class="form-control w-100 rounded-0">
+              <option data-trans="settingChooseLanguage">Choisir une langue</option>
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <hr>
+          <form id="settingForm">
+            <div class="mt-3 mb-3">
+              <label for="pageSetting" class="text-dark" data-trans="itemByPage">
+                Number of items to display per page
+              </label>
+              <input type="number" name="pageSetting" id="pageSetting" min="25" max="100" class="form-control rounded-0"
+                value="<%= pageSetting %>">
+            </div>
+
+            <div class="mt-3 mb-3">
+              <div class="form-check form-switch d-flex">
+                <input class="form-check-input" type="checkbox" role="switch" id="analytics" name="analytics">
+                <label class="form-check-label text-dark ms-3" for="analytics" data-trans="allowAnalytic">Allow analysis
+                  of your use of
+                  Intersect Tool</label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-0 w-100">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Second Col6 -->
+    <% if(userToken==false) { %>
+      <div class="col-md-6">
+        <div class="card rounded-0 border-0">
+          <div class="card-header text-center rounded-0 border-0">
+            <h5 class="card-title text-white text-center text-uppercase" data-trans="IntersectConnectLoginTitle"></h5>
+          </div>
+          <div class="card-body">
+            <form id="connectForm">
+              <div class="mt-3 mb-3">
+                <label for="email" class="text-dark">
+                  E-mail
+                </label>
+                <input type="email" name="Email" id="email" class="form-control rounded-0">
+              </div>
+              <div class="mt-3 mb-3">
+                <label for="passwprd" class="text-dark">
+                  Password
+                </label>
+                <input type="password" name="Password" id="passwprd" class="form-control rounded-0">
+              </div>
+              <button type="submit" class="btn btn-primary rounded-0 w-100">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% }else{ %>
+        <div class="col-md-6">
+          <div class="card rounded-0 border-0">
+            <div class="card-header text-center rounded-0 border-0">
+              <h5 class="card-title text-white text-center text-uppercase" data-trans="IntersectConnectTitle"></h5>
+            </div>
+            <div class="card-body">
+              <% if(serverIdExist==false) { %>
+                <div class="mb-3 text-dark">
+                  <strong class="text-dark">Information :</strong>
+                  <span data-trans="IntersectConnectSaveInfo"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary rounded-0 w-100" id="IntersectConnectSaveButton"
+                  data-trans="IntersectConnectSaveButton">Login</button>
+                <% }else{ %>
+                  <span class="text-dark" data-trans="IntersectConnectServerId"></span> <br> <span class="text-dark"><%= serverId %></span>
+                <% } %>
+
+            </div>
+          </div>
+        </div>
+        <% } %>
+  </div>
+</section>

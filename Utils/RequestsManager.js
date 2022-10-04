@@ -1,24 +1,20 @@
 const { ipcRenderer } = require('electron');
-const { launcherVersion, devMode, steamMode, allowChangeInstallPath, includeFiles, getConfig, getLang } = require('../Utils');
+const { StorageManager } = require("./StorageManager");
+const { Params } = require('./Params');
 
 class RequestsManager {
     constructor() {
         this.ipcRenderer = ipcRenderer;
-        this.mageworkEndpoint = devMode ? "https://127.0.0.1:8000/api" : "https://mageworkstudios.com/api/";
-        this.nightmareEndpoint = devMode ? "https://127.0.0.1:8001/en/api/" : "https://nightmare.mageworkstudios.com/en/api/";
-    }
-
-    test() {
-        console.log('fs', fs.existsSync('./src/Utils/DownloadManager.js'))
-        return 'Test Success';
+        this.endpoint = Params.dev ? "https://127.0.0.1:8000/api" : "https://intersect-connect.tk/api/";
+        this.store = new StorageManager();
     }
 
     ipcSend(key, arg = null) {
         return ipcRenderer.send(key, arg);
     }
 
-    async getMagework(url) {
-        return await fetch(this.mageworkEndpoint + url)
+    async get(url) {
+        return await fetch(this.endpoint + url)
             .then((response) => {
                 console.log(response)
                 if (response.status !== 200) {
@@ -31,8 +27,8 @@ class RequestsManager {
             });
     }
 
-    async postMagework(url, formData) {
-        return await fetch(this.mageworkEndpoint + url, {
+    async post(url, formData) {
+        return await fetch(this.endpoint + url, {
             method: 'POST',
             body: formData
         }).then((response) => {
@@ -47,27 +43,15 @@ class RequestsManager {
         });
     }
 
-    async getNightmare(url) {
-        return await fetch(this.nightmareEndpoint + url)
-            .then((response) => {
-                if (response.status !== 200) {
-                    return false;
-                } else {
-                    return response.json()
-                }
-            }).catch(error => {
-                return false;
-            });
-    }
-
-    async postNightmare(url, formData) {
-        return await fetch(this.nightmareEndpoint + url, {
+    async checkLogin() {
+        const checkData = new FormData();
+        checkData.append("Token", this.store.getStorage("UserToken"));
+        return await fetch(this.endpoint + "/v1/auth/check", {
             method: 'POST',
-            body: formData
+            body: checkData
         }).then((response) => {
-            console.log(response)
             if (response.status !== 200) {
-                return false;
+                return response.json()
             } else {
                 return response.json()
             }
@@ -75,6 +59,7 @@ class RequestsManager {
             return false;
         });
     }
+
 }
 
 exports.RequestsManager = RequestsManager;

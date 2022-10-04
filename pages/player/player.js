@@ -19,7 +19,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
             console.log("previewsPlayerTab", localStorage.getItem("previewsPlayerTab"))
             init(characterData, userData);
 
-            function init(character, user) {
+            async function init(character, user) {
                 console.log(localStorage.getItem("previewsPlayerTab") == "inventaire" ? localStorage.getItem("previewsPlayerTab") : null)
                 content.innerHTML = ejs.render(mainHtml, {
                     "characterData": character.playerData,
@@ -153,7 +153,8 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                 let reason = formData.get("reason");
 
                 if (duration != null && reason != null) {
-                    const banRequest = await api.ban(characterData.playerData.Name, duration, reason);
+                    const banRequest = await api.ban(characterData.playerData.UserId, duration, reason);
+                    console.log("Requête ban",banRequest)
                     if (banRequest) {
                         await reloadPlayerData();
                         displayNotification = true;
@@ -179,7 +180,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              */
             async function unban() {
                 localStorage.setItem("previewsPlayerTab", "characterData")
-                const unbanRequest = await api.unBan(characterData.playerData.Name);
+                const unbanRequest = await api.unBan(characterData.playerData.UserId);
                 if (unbanRequest) {
                     await reloadPlayerData();
                     displayNotification = true;
@@ -205,7 +206,8 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                 let reason = formData.get("reason");
 
                 if (duration != null && reason != null) {
-                    const banRequest = await api.mute(userData.Id, duration, reason);
+                    const banRequest = await api.mute(characterData.playerData.UserId, duration, reason);
+                    console.log("Mute", banRequest)
                     if (banRequest) {
                         characterData = await api.getPlayer(characterData.playerData.Id);
                         userData = await api.getUser(characterData.playerData.UserId);
@@ -234,7 +236,9 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
              */
             async function unmute() {
                 localStorage.setItem("previewsPlayerTab", "characterData")
-                const unbanRequest = await api.unMute(characterData.playerData.Name);
+                const unbanRequest = await api.unMute(characterData.playerData.UserId);
+                console.log("UnMute", unbanRequest)
+
                 if (unbanRequest) {
                     await reloadPlayerData();
                     displayNotification = true;
@@ -341,6 +345,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
                 e.preventDefault();
                 localStorage.setItem("previewsPlayerTab", "characterData")
                 const kickRequest = await api.kick(characterData.playerData.Name);
+                console.log(kickRequest)
                 if (kickRequest.hasOwnProperty("Message") && kickRequest.Message != `${characterData.playerData.Name} has been kicked by the server!`) {
                     displayNotification = true;
                     notification = element.alertInfo(kickRequest.Message);
@@ -362,6 +367,7 @@ function renderPlayer(ejs, content, translateLib, apiLib, elementLib, characterD
             async function kill(e) {
                 e.preventDefault();
                 const killRequest = await api.kill(characterData.playerData.Name);
+                console.log(killRequest)
                 localStorage.setItem("previewsPlayerTab", "characterData")
                 if (killRequest.hasOwnProperty("Message") && killRequest.Message != `${characterData.playerData.Name} has been killed!`) {
                     displayNotification = true;

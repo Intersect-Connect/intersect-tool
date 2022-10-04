@@ -1,3 +1,5 @@
+const os = require("os");
+const http = require("http");
 const Navigo = require('navigo');
 const ejs = require('ejs');
 const shell = require('electron').shell;
@@ -33,7 +35,7 @@ const { renderUser } = require('./pages/user/user.js');
 const { renderLogin } = require('./pages/login/login.js');
 const { renderUsers } = require('./pages/users/users.js');
 const { renderUpdate } = require('./pages/update/index.js');
-const { renderSettings } = require('./pages/settings/settings.js');
+const { Settings } = require('./pages/settings/settings.js');
 const { ipcRenderer } = require('electron');
 
 const router = new Navigo('/', { hash: true });
@@ -41,6 +43,8 @@ const matomo = new MatomoTracker(12, 'https://analytics.thomasfds.fr/matomo.php'
 
 
 async function startRouter(content) {
+    console.log("Computer Name", os.hostname())
+    console.log(os.networkInterfaces())
 
     if (router.getCurrentLocation().hashString == "") {
         if (!store.storageExist("server_url") && !store.storageExist("accountUsername") && !store.storageExist("accountPassword")) {
@@ -394,7 +398,8 @@ async function startRouter(content) {
                         document.querySelector("#loading").classList.add("d-none");
                     }
                     matomoStat('it://settings');
-                    renderSettings(content, ipcRenderer, translate, store).then(router.updatePageLinks);
+                    const settingsController = new Settings(ipcRenderer,ejs, translate, store, os)
+                    settingsController.render().then(router.updatePageLinks);
                 },
                 rank: async () => {
                     const rankRequest = await api.getRank();
