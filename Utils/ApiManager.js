@@ -179,19 +179,15 @@ class ApiManager {
             formData = {
                 "grant_type": "password",
                 "username": this.getUsername(),
-                "password": this.getPassword(),
+                "password": this.getPassword()
             }
         } else {
             formData = {
                 "grant_type": "password",
                 "username": this.getUsername(),
-                "password": this.getPassword(),
+                "password": this.getPassword()
             }
         }
-
-        console.log("FormData", formData)
-
-
         return await this.post("/api/oauth/token", formData);
     }
 
