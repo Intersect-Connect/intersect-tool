@@ -2,8 +2,8 @@ const http = require('https');
 const fetch = require('node-fetch');
 const { StorageManager } = require('./StorageManager');
 const { RequestsManager } = require('./RequestsManager');
-
 const { ipcRenderer } = require('electron');
+const { Params } = require("./Params")
 
 class ApiManager {
 
@@ -17,17 +17,23 @@ class ApiManager {
 
 
     async checkLogin() {
-        if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
-            const requestCheckLogin = await this.request.checkLogin();
+        if (Params.intersectConnect) {
+            if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
+                const requestCheckLogin = await this.request.checkLogin();
 
-            if (requestCheckLogin.Success) {
-                console.log("User Logged");
-                const getData = await this.getServerData();
-                if (getData.Success) {
-                    this.setServerUrl(getData.ServerUrl);
-                    this.setUsername(getData.AccountUsername);
-                    this.setPassword(getData.AccountPassword);
+                if (requestCheckLogin.Success) {
+                    console.log("User Logged");
+                    const getData = await this.getServerData();
+                    if (getData.Success) {
+                        this.setServerUrl(getData.ServerUrl);
+                        this.setUsername(getData.AccountUsername);
+                        this.setPassword(getData.AccountPassword);
+                    }
                 }
+            } else {
+                this.setServerUrl(this.store.getStorage("server_url"));
+                this.setUsername(this.store.getStorage("accountUsername"));
+                this.setPassword(this.store.getStorage("accountPassword"));
             }
         } else {
             this.setServerUrl(this.store.getStorage("server_url"));
@@ -179,13 +185,13 @@ class ApiManager {
             formData = {
                 "grant_type": "password",
                 "username": this.getUsername(),
-                "password": this.getPassword(),
+                "password": this.getPassword()
             }
         } else {
             formData = {
                 "grant_type": "password",
                 "username": this.getUsername(),
-                "password": this.getPassword(),
+                "password": this.getPassword()
             }
         }
 

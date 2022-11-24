@@ -44,20 +44,25 @@ class RequestsManager {
     }
 
     async checkLogin() {
-        const checkData = new FormData();
-        checkData.append("Token", this.store.getStorage("UserToken"));
-        return await fetch(this.endpoint + "/v1/auth/check", {
-            method: 'POST',
-            body: checkData
-        }).then((response) => {
-            if (response.status !== 200) {
-                return response.json()
-            } else {
-                return response.json()
-            }
-        }).catch(error => {
-            return false;
-        });
+        if (Params.intersectConnect) {
+
+            const checkData = new FormData();
+            checkData.append("Token", this.store.getStorage("UserToken"));
+            return await fetch(this.endpoint + "/v1/auth/check", {
+                method: 'POST',
+                body: checkData
+            }).then((response) => {
+                if (response.status !== 200) {
+                    return response.json()
+                } else {
+                    return response.json()
+                }
+            }).catch(error => {
+                return false;
+            });
+        } else {
+            return true;
+        }
     }
 
 }

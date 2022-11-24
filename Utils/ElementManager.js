@@ -1,5 +1,3 @@
-const { Toast } = require("bootstrap");
-
 class ElementManager {
     constructor() {
 

@@ -1,6 +1,7 @@
 const Params = {
     dev:true,
-    portable:false
+    portable:false,
+    intersectConnect:false
 }
 
 exports.Params = Params;

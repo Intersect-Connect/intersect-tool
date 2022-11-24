@@ -56,7 +56,8 @@
         "win": {
             "icon": "build/ico.png",
             "target": [
-                "nsis"
+                "nsis",
+                "msi"
             ],
             "requestedExecutionLevel": "",
             "artifactName": "${productName}-portable.${ext}",
@@ -81,6 +82,9 @@
             "perMachine": false,
             "deleteAppDataOnUninstall": true,
             "artifactName": "${productName}-Setup.${ext}"
+        },
+        "msi": {
+            "artifactName": "${productName}-msi.${ext}"
         },
         "appImage": {
             "artifactName": "${productName}.${ext}"
