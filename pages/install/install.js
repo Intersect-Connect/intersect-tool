@@ -43,19 +43,33 @@ function renderInstall(content, translateLib, storeLib, ipcRendererLib, cryptoLi
                         formData.get("port") != "" || formData.get("port") != null &&
                         formData.get("username") != "" || formData.get("username") != null &&
                         formData.get("password") != "" || formData.get("password") != null &&
-                        formData.get("version") != "" || formData.get("version") != null
+                        formData.get("version") != "" || formData.get("version") != null &&
+                        formData.get("formatUrl") != "" || formData.get("formatUrl") != null
 
                     ) {
                         const hashPwd = crypto.createHash('sha256').update(formData.get("password")).digest('hex');
-                        if( formData.get("version") === "http"){
+                        console.log(formData.get("formatUrl"))
+                        if (formData.get("version") === "http" && formData.get("formatUrl") == 1) {
                             store.setStorage("server_url", `http://${formData.get("ip")}:${formData.get("port")}`);
                         }
-                        if( formData.get("version") === "https"){
+
+                        if (formData.get("version") === "https" && formData.get("formatUrl") == 1) {
                             store.setStorage("server_url", `https://${formData.get("ip")}:${formData.get("port")}`);
                         }
+
+                        if (formData.get("version") === "http" && formData.get("formatUrl") == 2) {
+                            console.log(`http://${formData.get("ip")}/${formData.get("port")}`)
+                            store.setStorage("server_url", `http://${formData.get("ip")}/${formData.get("port")}`);
+                        }
+
+                        if (formData.get("version") === "https" && formData.get("formatUrl") == 2) {
+                            `https://${formData.get("ip")}/${formData.get("port")}`
+                            store.setStorage("server_url", `https://${formData.get("ip")}/${formData.get("port")}`);
+                        }
+
                         store.setStorage("accountUsername", formData.get("username"));
                         store.setStorage("accountPassword", hashPwd);
-                        store.setStorage("httpVersion",  formData.get("version"));
+                        store.setStorage("httpVersion", formData.get("version"));
                         ipcRenderer.send("goTo", "/getToken");
                     }
                 });
