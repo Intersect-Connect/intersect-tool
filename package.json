@@ -1,6 +1,6 @@
 {
     "name": "intersect-tool",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "description": "Intersect Admin Tool for Intersect Engine",
     "main": "main.js",
     "scripts": {
@@ -50,7 +50,7 @@
         "publish": [
             {
                 "provider": "generic",
-                "url": "https://intersect-connect.tk/download/intersect-tools/"
+                "url": "https://intersect-connect.tk/downloads/intersect-tools/"
             }
         ],
         "win": {

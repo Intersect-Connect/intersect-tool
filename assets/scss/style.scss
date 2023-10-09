@@ -141,20 +141,24 @@ nav.uk-navbar {
     }
 }
 
-#guildNav, .playerNav {
+#guildNav,
+.playerNav {
     background: #0c1421 !important;
 
-    .nav-item,.nav-link {
+    .nav-item,
+    .nav-link {
         a {
             text-decoration: none !important;
-            &.active{
+
+            &.active {
                 background: #182b4b !important;
             }
         }
 
         button {
             text-decoration: none !important;
-            &.active{
+
+            &.active {
                 background: #182b4b !important;
             }
         }
@@ -218,7 +222,13 @@ nav.uk-navbar {
     overflow-x: auto;
 }
 
-.toast{
-    top: 7rem!important;
-    right: 0rem!important;
+.toast {
+    top: 7rem !important;
+    right: 0rem !important;
+}
+
+#pills-inventaire {
+    overflow: auto!important;
+    min-height: 300px!important;
+    max-height: 400px!important;
 }

@@ -83,7 +83,7 @@ class ApiManager {
             'Content-Type': 'application/json'
         };
 
-        return await fetch(this.getServerUrl() + apiRoute, {
+        return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'GET',
             headers: headers,
         })
@@ -97,6 +97,7 @@ class ApiManager {
                 }
 
             }).catch(error => {
+                console.log("getError", error);
                 return ipcRenderer.send("goTo", "/offline");
             });
     }
@@ -107,7 +108,7 @@ class ApiManager {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.store.getStorage("api_token")}`,
         };
-        return await fetch(this.server_url + apiRoute, {
+        return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'GET',
             headers: headers,
             mode: "cors"
@@ -126,6 +127,7 @@ class ApiManager {
                     }
                 }
             }).catch(error => {
+                console.log("getAuth", error);
                 return ipcRenderer.send("goTo", "/offline");
             });
     }
@@ -136,7 +138,7 @@ class ApiManager {
             'Content-Type': 'application/json'
         };
 
-        return await fetch(this.getServerUrl() + apiRoute, {
+        return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'POST',
             headers: headers,
             mode: "cors",
@@ -150,6 +152,7 @@ class ApiManager {
                 return response.json()
             }
         }).catch(error => {
+            console.log("post", error);
             return false;
         });
     }
@@ -162,7 +165,7 @@ class ApiManager {
         };
 
 
-        return await fetch(this.getServerUrl() + apiRoute, {
+        return await fetch(this.store.getStorage("server_url") + apiRoute, {
             method: 'POST',
             headers: headers,
             body: formData.length != 0 ? JSON.stringify(formData) : null
@@ -175,6 +178,7 @@ class ApiManager {
                 return response.json()
             }
         }).catch(error => {
+            console.log("postAuth", error);
             ipcRenderer.send("goTo", "/offline");
         });
     }
@@ -184,19 +188,16 @@ class ApiManager {
         if (this.store.storageExist("UserToken") && this.store.storageExist("ServerId")) {
             formData = {
                 "grant_type": "password",
-                "username": this.getUsername(),
-                "password": this.getPassword()
+                "username": this.store.getStorage("accountUsername"),
+                "password": this.store.getStorage("accountPassword")
             }
         } else {
             formData = {
                 "grant_type": "password",
-                "username": this.getUsername(),
-                "password": this.getPassword()
+                "username": this.store.getStorage("accountUsername"),
+                "password": this.store.getStorage("accountPassword")
             }
         }
-
-        console.log("FormData", formData)
-
 
         return await this.post("/api/oauth/token", formData);
     }
@@ -321,7 +322,6 @@ class ApiManager {
     }
 
     async ban(userId, duration, reason) {
-        console.log(userId)
         const formData = {
             "duration": duration,
             "reason": reason,

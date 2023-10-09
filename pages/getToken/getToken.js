@@ -19,11 +19,17 @@ function renderGetToken(content, translateLib, storeLib, ipcRendererLib, cryptoL
             content.innerHTML = mainHtml;
             try {
                 const authTokenRequest = await api.tokenAuth();
+                console.log('Token Response', authTokenRequest)
+
                 if (authTokenRequest.access_token) {
+                    console.log('Token ok', authTokenRequest)
+
                     store.setStorage("api_token", authTokenRequest.access_token);
                     return ipcRenderer.send("goTo", "/login")
                 }
             } catch (error) {
+                console.log('Token bad', error)
+
                 const authTokenRequest = await api.tokenAuth();
                 if (authTokenRequest.access_token) {
                     store.setStorage("api_token", authTokenRequest.access_token);
