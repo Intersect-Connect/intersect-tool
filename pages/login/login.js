@@ -26,7 +26,7 @@ function renderLogin(content, translateLib, storeLib, ipcRendererLib, cryptoLib,
                 ) {
                     const hashPwd = crypto.createHash('sha256').update(formData.get("password")).digest('hex');
                     const loginRequest = await api.validePassword(formData.get("username"), hashPwd);
-                    console.log(loginRequest)
+                    console.log("Request", loginRequest)
                     if (loginRequest) {
                         const getUser = await api.getUser(formData.get("username"));
                         console.log(getUser)

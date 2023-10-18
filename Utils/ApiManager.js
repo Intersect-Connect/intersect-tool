@@ -133,18 +133,25 @@ class ApiManager {
     }
 
     async post(apiRoute, formData, token) {
+
         let headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         };
 
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        const url = this.store.getStorage("server_url") + apiRoute;
+
+        process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = url.includes("localhost") ? "0" : "1";
+
+        return await fetch(url, {
             method: 'POST',
             headers: headers,
             mode: "cors",
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            rejectUnauthorized: url.includes("localhost") ? false : true
         }).then(async (response) => {
             console.log("post:", response.status, " Route:", apiRoute);
+            console.log('status', response.status)
             if (response.status == 401) {
                 await this.reloadToken();
                 await this.get(apiRoute);
@@ -164,22 +171,27 @@ class ApiManager {
             'Authorization': `Bearer ${this.store.getStorage("api_token")}`,
         };
 
+        const url = this.store.getStorage("server_url") + apiRoute;
+        console.log(url)
 
-        return await fetch(this.store.getStorage("server_url") + apiRoute, {
+        process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = url.includes("localhost") ? "0" : "1";
+
+        return await fetch(url, {
             method: 'POST',
             headers: headers,
-            body: formData.length != 0 ? JSON.stringify(formData) : null
+            body: formData.length != 0 ? JSON.stringify(formData) : null,
+            rejectUnauthorized: url.includes("localhost") ? false : true
         }).then(async (response) => {
             console.log("postAuth:", response.status, " Route:", apiRoute);
-            if (response.status == 401) {
+            if (response.status == 401 || response.status == 403) {
                 await this.reloadToken();
                 await this.get(apiRoute);
             } else {
                 return response.json()
             }
         }).catch(error => {
-            console.log("postAuth", error);
-            ipcRenderer.send("goTo", "/offline");
+            console.log("postAuthError", error);
+            // ipcRenderer.send("goTo", "/offline");
         });
     }
 
@@ -216,9 +228,10 @@ class ApiManager {
             "password": password
         }
         const request = await this.postAuth(`/api/v1/users/${username}/password/validate`, formData);
-        if (request.Message == "Password Correct") {
+        if (request.Message != undefined && request.Message == "Password Correct" || request == "Password Correct") {
             return true;
         } else {
+            console.log("ErreurIci")
             if (request.Message == "Authorization has been denied for this request.") {
                 await this.reloadToken();
                 return await this.validePassword(username, password);

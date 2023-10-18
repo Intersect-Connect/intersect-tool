@@ -1,16 +1,20 @@
 let translation = null;
 let api = null;
 
-function renderMain(ejs, content, translateLib, apiLib, playersList, getServerStat) {
-    translation = translateLib;
-    api = apiLib;
+function renderMain(ejs, content, libs, controllerData) {
+    translation = libs.translate;
+    api = libs.api;
     // const content = document.querySelector(".content");
     console.log('Load Main')
     return fetch("./pages/main/main.ejs", {
         mode: "cors"
     }).then((response) => response.text())
         .then(async (mainHtml) => {
-            content.innerHTML = ejs.render(mainHtml, { playersList, "stat": getServerStat, "uptime": timeago(getServerStat.uptime) });
+            const playerList = controllerData.playerList;
+            const getServerStat = controllerData.serverStat;
+            analytics();
+
+            content.innerHTML = ejs.render(mainHtml, { playerList, "stat": getServerStat, "uptime": timeago(getServerStat.uptime) });
             translation.getTranslation();
 
             function timeago(ms) {
@@ -70,5 +74,37 @@ function renderMain(ejs, content, translateLib, apiLib, playersList, getServerSt
             }
         });
 };
+
+function analytics() {
+    // Stocker des données dans le cache avec expiration
+    const key = 'cachedDataTrackUrl-index';
+    const data = { url:"it://index" };
+    const expiration = Date.now() + 3600000; // Expiration dans 1 heure
+
+    const cacheData = { data, expiration };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+
+    // Récupérer les données du cache
+    const cachedData = localStorage.getItem(key);
+    if (cachedData) {
+        const parsedCache = JSON.parse(cachedData);
+        if (parsedCache.expiration > Date.now()) {
+            // Les données sont encore valides, utilisez-les
+            const cachedData = parsedCache.data;
+        } else {
+            // Les données ont expiré, supprimez-les du cache
+            localStorage.removeItem(key);
+
+            if (libs.store.storageExist("allowAnalytic") && libs.store.getStorage("allowAnalytic")) {
+                libs.matomo.track({
+                    url: `it://index`,
+                    _idts: libs.store.getStorage("firstVisit"),
+                    _viewts: libs.store.getStorage("lastVisit")
+                });
+            }
+        }
+    }
+
+}
 
 exports.renderMain = renderMain;
