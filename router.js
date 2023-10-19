@@ -45,6 +45,7 @@ const libs = {
     "translate": translate,
     "api": new ApiManager(),
     "store": store,
+    "ipcRenderer": ipcRenderer,
 }
 
 
@@ -151,10 +152,14 @@ async function startRouter(content) {
                         } else {
                             players = [];
                         }
+                        const controllerData = {
+                            "players": players,
+                            "page": pages
+                        }
                         // matomoStat('it://playersList');
                         // await matomoStatWithDelay('it://playersList');
 
-                        renderPlayerList(ejs, content, translate, api, ipcRenderer, players, pages).then(router.updatePageLinks);
+                        renderPlayerList(ejs, content, libs, controllerData).then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");
@@ -377,6 +382,7 @@ async function startRouter(content) {
                 },
                 variables: async () => {
                     const requestVariables = await api.getServerVariables(0);
+                    console.log(requestVariables)
                     if (requestVariables != undefined) {
                         if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
                             document.getElementById("mainNav").classList.remove("d-none");

@@ -57,6 +57,8 @@ async function createWindow() {
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
         mainWindow.center();
+        mainWindow.maximize();
+        mainWindow.focus();
 
         /**
          * Si le language par défaut n'est pas définit

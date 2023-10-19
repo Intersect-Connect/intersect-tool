@@ -89,7 +89,9 @@ class ApiManager {
         })
             .then(async (response) => {
                 console.log("get:", response.status, " Route:", apiRoute);
-                if (response.status == 401) {
+                if (response.status == 401 || response.status == 403) {
+                    console.log("Reload Token")
+
                     await this.reloadToken();
                     await this.get(apiRoute);
                 } else {
@@ -116,9 +118,10 @@ class ApiManager {
             .then(async (response) => {
                 console.log("getAuth:", response.status, " Route:", apiRoute);
 
-                if (response.status == 401) {
+                if (response.status == 401 || response.status == 403) {
+                    console.log("Reload Token")
                     await this.reloadToken();
-                    await this.get(apiRoute);
+                    await this.getAuth(apiRoute);
                 } else {
                     if (response.status == 404) {
                         return { "Message": "Not found" };
@@ -152,9 +155,11 @@ class ApiManager {
         }).then(async (response) => {
             console.log("post:", response.status, " Route:", apiRoute);
             console.log('status', response.status)
-            if (response.status == 401) {
+            if (response.status == 401 || response.status == 403) {
+                console.log("Reload Token")
+
                 await this.reloadToken();
-                await this.get(apiRoute);
+                await this.post(apiRoute);
             } else {
                 return response.json()
             }
@@ -172,20 +177,24 @@ class ApiManager {
         };
 
         const url = this.store.getStorage("server_url") + apiRoute;
+        const data = JSON.stringify(formData);
         console.log(url)
+        console.log("DATA", formData)
+        console.log("DATAFORMATED", data)
 
         process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = url.includes("localhost") ? "0" : "1";
 
         return await fetch(url, {
             method: 'POST',
             headers: headers,
-            body: formData.length != 0 ? JSON.stringify(formData) : null,
+            body: data,
             rejectUnauthorized: url.includes("localhost") ? false : true
         }).then(async (response) => {
             console.log("postAuth:", response.status, " Route:", apiRoute);
             if (response.status == 401 || response.status == 403) {
+                console.log("Reload Token")
                 await this.reloadToken();
-                await this.get(apiRoute);
+                await this.postAuth(apiRoute);
             } else {
                 return response.json()
             }
@@ -420,6 +429,7 @@ class ApiManager {
         const requestGuild = this.getAuth(`/api/v1/guilds/${id}`);
         const requestGuildMember = this.getAuth(`/api/v1/guilds/${id}/members?page=${page}pageSize=${this.store.getStorage("pageSetting")}`);
         const requestGuildVariable = this.getAuth(`/api/v1/guilds/${id}/variables`);
+        console.log(requestGuild, requestGuildMember, "GVariable", requestGuildVariable);
         const allData = await Promise.all([requestGuild, requestGuildMember, requestGuildVariable]);
 
         const guild = {
@@ -436,14 +446,19 @@ class ApiManager {
             "page": page,
             "count": 25,
         }
-        const request = await this.postAuth(`/api/v1/variables/global`, formData);
-        console.log(request);
+        let request = await this.postAuth(`/api/v1/variables/global`, formData);
+
+        if(request == undefined){
+            request = await this.getAuth(`/api/v1/variables/global?page=${page}&count=${this.store.getStorage("pageSetting")}`, formData);
+        }
+
+        console.log("Initial request", request);
         return request;
     }
 
     async setServerVariables(variableId, value) {
         const formData = {
-            "value": value,
+            "value": this.convertValue(value),
         }
         const request = await this.postAuth(`/api/v1/variables/global/${variableId}`, formData);
         console.log(request);
@@ -469,5 +484,23 @@ class ApiManager {
         console.log(request);
         return request;
     }
+
+    convertValue(value) {
+        console.log("Original Value", value)
+        if (typeof value === 'string') {
+          if (!isNaN(value)) {
+            console.log("value is a number")
+            // Si la valeur est une chaîne qui peut être convertie en nombre
+            return Number(value);
+          } else if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+            // Si la valeur est une chaîne "true" ou "false"
+            return value.toLowerCase() === 'true';
+          }
+        }
+        console.log("no conversion")
+
+        // Retourner la valeur d'origine si aucune conversion n'est possible
+        return value;
+      }      
 }
 exports.ApiManager = ApiManager;

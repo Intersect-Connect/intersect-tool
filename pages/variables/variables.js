@@ -67,6 +67,7 @@ function renderVariables(ejs, content, translateLib, ApiLib, ipcRendererLib, ele
                             }
 
                             const request = await api.setServerVariables(variableId, value);
+                            console.log("Request from controller", request)
                             if (request.hasOwnProperty("VariableId")) {
                                 displayNotification = true;
                                 notification = element.alertSuccess("The variable has been changed");

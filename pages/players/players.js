@@ -1,29 +1,37 @@
 let translation = null;
 let api = null;
 let ipcRenderer = null;
+let libs = null;
+let contentHtml = null;
+let ejs = null;
+let data = null;
+let mainHtml = null;
 
-function renderPlayerList(ejs, content, translateLib, apiLib, ipcRendererLib, players, pages) {
-    translation = translateLib;
-    api = apiLib;
-    ipcRenderer = ipcRendererLib;
+function renderPlayerList(ejsLib, content, controllerLibs, controllerData) {
+    ejs = ejsLib;
+    contentHtml = content;
+    libs = controllerLibs;
+    data = controllerData;
+    console.log("Data", libs);
     return fetch("./pages/players/players.ejs")
         .then((response) => response.text())
-        .then(async (mainHtml) => {
+        .then(async (html) => {
+            mainHtml = html;
             init();
-            analytics();
-
-            
+            analytics();        
         });
 };
 
 function init() {
-    content.innerHTML = ejs.render(mainHtml, {
-        "players": players,
-        "pages": pages,
+    console.log(ejs, data)
+    contentHtml.innerHTML = ejs.render(mainHtml, {
+        "players": data.players,
+        "pages": data.pages,
         "pageActual": localStorage.getItem("playersPages"),
         "nextPage": Number(localStorage.getItem("playersPages")) + 1
     });
-    translation.getTranslation();
+
+    libs.translate.getTranslation();
 
     const pageListSelect = document.getElementById("pageList");
 
@@ -32,7 +40,7 @@ function init() {
             let value = e.target.value;
 
             if (value != "PageList") {
-                return ipcRenderer.send("goTo", `/accounts/pages/${value}`);
+                return libs.ipcRenderer.send("goTo", `/accounts/pages/${value}`);
             }
         })
     }
