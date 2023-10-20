@@ -14,6 +14,8 @@ function renderUpdate(content, ipcRendererLib, ElementManager, translateLib) {
       const progressBar = document.getElementById("progress");
       const downloadText = document.getElementById("downloadText");
       const loadingDiv = document.getElementById("loadingDiv");
+      document.getElementById("searchNav").classList.add("d-none");
+      document.getElementById("mainNav").classList.add("d-none");
 
       translate.getTranslation();
 

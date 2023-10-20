@@ -216,7 +216,11 @@ class TranslationManager {
     }
 
     getActualLanguage(){
+        return this.store.getStorage("language");
+        console.log("Get language", this.language);
+
         this.language = this.store.getStorage("language");
+        console.log("Get language", this.language);
         return this.language;
     }
 }

@@ -8,6 +8,18 @@ const { TranslationManager } = require("./Utils/TranslationManager");
 const { StorageManager } = require("./Utils/StorageManager");
 const { ApiManager } = require("./Utils/ApiManager");
 const { ElementManager } = require("./Utils/ElementManager");
+
+const { MainController } = require("./Controller/MainController");
+const { PlayersController } = require("./Controller/PlayersController");
+const { CharacterController } = require("./Controller/CharacterController");
+const { AccountsController } = require("./Controller/AccountsController");
+const { AccountController } = require("./Controller/AccountController");
+const { GuildsController } = require("./Controller/GuildsController");
+const { GuildController } = require("./Controller/GuildController");
+const { GuildVariablesController } = require("./Controller/GuildVariablesController");
+const { VariablesController } = require("./Controller/VariablesController");
+const { RankController } = require("./Controller/RankController");
+
 const crypto = require('crypto');
 
 const store = new StorageManager();
@@ -16,23 +28,12 @@ const element = new ElementManager();
 
 const { renderInstall } = require('./pages/install/install.js');
 const { renderGetToken } = require('./pages/getToken/getToken.js');
-const { renderAccount } = require('./pages/account/account.js');
-const { renderAccounts } = require('./pages/accounts/accounts.js');
-const { renderGuilds } = require('./pages/guilds/guilds.js');
-const { renderVariables } = require('./pages/variables/variables.js');
-const { renderGuildMembers } = require('./pages/guild_members/guild_members.js');
-const { renderGuildVariables } = require('./pages/guild_variables/guild_variables.js');
 const { renderOffline } = require('./pages/offline/offline.js');
 const { renderAccountLog } = require('./pages/accountLog/accountLog.js');
-const { renderMain } = require('./pages/main/main.js');
-const { renderPlayerList } = require('./pages/players/players.js');
 const { renderRank } = require('./pages/rank/rank.js');
-const { renderPlayer } = require('./pages/player/player.js');
 const { renderAbout } = require('./pages/about/about.js');
 const { renderSupport } = require('./pages/support/support.js');
-const { renderUser } = require('./pages/user/user.js');
 const { renderLogin } = require('./pages/login/login.js');
-const { renderUsers } = require('./pages/users/users.js');
 const { renderUpdate } = require('./pages/update/index.js');
 const { Settings } = require('./pages/settings/settings.js');
 const { ipcRenderer } = require('electron');
@@ -41,9 +42,11 @@ const router = new Navigo('/', { hash: true });
 const matomo = new MatomoTracker(12, 'https://analytics.thomasfds.fr/matomo.php');
 
 const libs = {
+    "ejs": ejs,
     "matomo": matomo,
     "translate": translate,
     "api": new ApiManager(),
+    "element": element,
     "store": store,
     "ipcRenderer": ipcRenderer,
 }
@@ -94,6 +97,7 @@ async function startRouter(content) {
             }
         }
     }
+
     try {
         router
             .on({
@@ -115,16 +119,11 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
 
-                        playerList = getOnlineList.entries;
-                        serverStat = getServerStat;
-
-                        const controllerData = {
-                            "playerList": playerList,
-                            "serverStat": serverStat
-                        }
-                        // matomoStat('it://index');
-                        // await matomoStatWithDelay('it://index');
-                        renderMain(ejs, content, libs, controllerData).then(router.updatePageLinks);
+                        const mainController = new MainController(content, libs, {
+                            "playerList": getOnlineList.entries,
+                            "serverStat": getServerStat
+                        });
+                        await mainController.render().then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");
@@ -152,16 +151,13 @@ async function startRouter(content) {
                         } else {
                             players = [];
                         }
-                        const controllerData = {
+
+                        const playersController = new PlayersController(content, libs, {
                             "players": players,
                             "page": pages
-                        }
-                        // matomoStat('it://playersList');
-                        // await matomoStatWithDelay('it://playersList');
-
-                        renderPlayerList(ejs, content, libs, controllerData).then(router.updatePageLinks);
+                        });
+                        playersController.render().then(router.updatePageLinks);
                     } else {
-
                         return goTo("/offline");
                     }
 
@@ -181,12 +177,13 @@ async function startRouter(content) {
                         } else {
                             players = [];
                         }
-                        // matomoStat('it://playersList/');
-                        // await matomoStatWithDelay('it://playersList');
 
-                        renderPlayerList(ejs, content, translate, api, ipcRenderer, players, pages).then(router.updatePageLinks);
+                        const playersController = new PlayersController(content, libs, {
+                            "players": players,
+                            "page": pages
+                        });
+                        await playersController.render().then(router.updatePageLinks);
                     } else {
-
                         return goTo("/offline");
                     }
                 },
@@ -199,13 +196,14 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const userData = await api.getUser(characterData.playerData.UserId);
-                        console.log(characterData)
-                        // matomoStat('it://seeUser');
-                        // await matomoStatWithDelay('it://seeUser');
 
-                        renderPlayer(ejs, content, translate, api, element, characterData, userData).then(router.updatePageLinks);
+                        const characterController = new CharacterController(content, libs, {
+                            "characterData": characterData,
+                            "userData": userData
+                        });
+
+                        await characterController.render().then(router.updatePageLinks);
                     } else {
-
                         return goTo("/offline");
                     }
 
@@ -225,12 +223,13 @@ async function startRouter(content) {
                         } else {
                             users = [];
                         }
-                        // matomoStat('it://accountsList');
-                        // await matomoStatWithDelay('it://accountsList');
 
-                        renderAccounts(ejs, content, translate, api, users, pages).then(router.updatePageLinks);
+                        const accountsController = new AccountsController(content, libs, {
+                            "users": users,
+                            "pages": pages
+                        });
+                        await accountsController.render().then(router.updatePageLinks);
                     } else {
-
                         return goTo("/offline");
                     }
 
@@ -250,10 +249,11 @@ async function startRouter(content) {
                         } else {
                             users = [];
                         }
-                        // matomoStat('it://accountsList');
-                        // await matomoStatWithDelay('it://accountsList');
-
-                        renderAccounts(ejs, content, translate, api, users, pages).then(router.updatePageLinks);
+                        const accountsController = new AccountsController(content, libs, {
+                            "users": users,
+                            "pages": pages
+                        });
+                        await accountsController.render().then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");
@@ -268,10 +268,13 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const charactersData = await api.getUserCharacters(data.id);
-                        // matomoStat('it://seeAccount');
-                        // await matomoStatWithDelay('it://seeAccount');
-
-                        renderAccount(ejs, content, translate, api, element, userData, charactersData).then(router.updatePageLinks);
+                        
+                        const accountController = new AccountController(content, libs, {
+                            "userData": userData,
+                            "charactersData": charactersData
+                        });
+                        await accountController.render().then(router.updatePageLinks);
+                        
                     } else {
 
                         return goTo("/offline");
@@ -313,10 +316,12 @@ async function startRouter(content) {
                         } else {
                             guilds = [];
                         }
-                        // matomoStat('it://guilds');
-                        // await matomoStatWithDelay('it://guilds');
+                        const guildsController = new GuildsController(content, libs, {
+                            "guilds": guilds,
+                            "pages": pages
+                        });
 
-                        renderGuilds(ejs, content, translate, api, ipcRenderer, guilds, pages).then(router.updatePageLinks);
+                        await guildsController.render().then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");
@@ -338,28 +343,35 @@ async function startRouter(content) {
                         } else {
                             guilds = [];
                         }
-                        // matomoStat('it://guilds');
-                        // await matomoStatWithDelay('it://guilds');
+                        const guildsController = new GuildsController(content, libs, {
+                            "guilds": guilds,
+                            "pages": pages
+                        });
 
-                        renderGuilds(ejs, content, translate, api, ipcRenderer, guilds, pages).then(router.updatePageLinks);
+                        await guildsController.render().then(router.updatePageLinks);
                     } else {
                         return goTo("/offline");
                     }
                 },
                 "guild/:id/pages/:page": async ({ data, params }) => {
+
                     const requestGuild = await api.getGuild(data.id, data.page);
+                    console.log( requestGuild, data ) 
+
                     if (requestGuild != undefined) {
                         if (document.getElementById("mainNav") && document.getElementById("mainNav") && document.querySelector("#loading")) {
                             document.getElementById("mainNav").classList.remove("d-none");
                             document.getElementById("searchNav").classList.remove("d-none");
                             document.querySelector("#loading").classList.add("d-none");
                         }
-                        // matomoStat('it://guildMember');
-                        // await matomoStatWithDelay('it://guildMember');
 
-                        renderGuildMembers(ejs, content, translate, api, ipcRenderer, element, requestGuild).then(router.updatePageLinks);
+                        const guildController = new GuildController(content, libs, {
+                            "guild": requestGuild,
+                            "members": requestGuild.members
+                        });
+
+                        await guildController.render().then(router.updatePageLinks);
                     } else {
-
                         return goTo("/offline");
                     }
                 },
@@ -371,10 +383,11 @@ async function startRouter(content) {
                             document.getElementById("searchNav").classList.remove("d-none");
                             document.querySelector("#loading").classList.add("d-none");
                         }
-                        // matomoStat('it://guildVariable');
-                        // await matomoStatWithDelay('it://guildVariable');
 
-                        renderGuildVariables(ejs, content, translate, api, ipcRenderer, element, requestGuild).then(router.updatePageLinks);
+                        const guildVariablesController = new GuildVariablesController(content, libs, {
+                            "guild": requestGuild
+                        });
+                        await guildVariablesController.render().then(router.updatePageLinks);
                     } else {
 
                         return goTo("/offline");
@@ -390,11 +403,12 @@ async function startRouter(content) {
                             document.querySelector("#loading").classList.add("d-none");
                         }
                         const pages = Math.round(requestVariables.Total / requestVariables.PageSize);
-                        renderVariables(ejs, content, translate, api, ipcRenderer, element, requestVariables, pages).then(router.updatePageLinks);
+                        const variablesController = new VariablesController(content, libs, {
+                            "variables": requestVariables,
+                            "pages": pages
+                        });
+                        await variablesController.render().then(router.updatePageLinks);
                     } else {
-                        // matomoStat('it://seeGlobalVariable');
-                        // await matomoStatWithDelay('it://seeGlobalVariable');
-
                         return goTo("/offline");
                     }
 
@@ -407,11 +421,12 @@ async function startRouter(content) {
                             document.getElementById("searchNav").classList.remove("d-none");
                             document.querySelector("#loading").classList.add("d-none");
                         }
-                        const pages = Math.round(requestVariables.total / requestVariables.count);
-                        // matomoStat('it://seeGlobalVariable');
-                        // await matomoStatWithDelay('it://seeGlobalVariable');
-
-                        renderVariables(ejs, content, translate, api, ipcRenderer, element, requestVariables, pages).then(router.updatePageLinks);
+                        const pages = Math.round(requestVariables.Total / requestVariables.PageSize);
+                        const variablesController = new VariablesController(content, libs, {
+                            "variables": requestVariables,
+                            "pages": pages
+                        });
+                        await variablesController.render().then(router.updatePageLinks);
                     } else {
                         return goTo("/offline");
                     }
@@ -469,7 +484,10 @@ async function startRouter(content) {
                         // matomoStat('it://rank');
                         // await matomoStatWithDelay('it://rank');
 
-                        renderRank(ejs, content, translate, api, element, rankRequest).then(router.updatePageLinks);
+                        const rankController = new RankController(content, libs, {
+                            "players": rankRequest
+                        });
+                        await rankController.render().then(router.updatePageLinks);
                     } else {
                         // matomoStat('it://offline');
                         // await matomoStatWithDelay('it://offline');
@@ -490,12 +508,6 @@ async function startRouter(content) {
                 },
                 login: () => {
                     renderLogin(content, translate, store, ipcRenderer, crypto, api).then(router.updatePageLinks);;
-                },
-                users: () => {
-                    renderUsers(content).then(router.updatePageLinks);
-                },
-                "/user/:id/": ({ data, params }) => {
-                    renderUser(content, data.id);
                 },
             })
             .notFound(() => {
@@ -527,7 +539,7 @@ async function matomoStatWithDelay(url) {
     // return new Promise((resolve, reject) => {
     //     setTimeout(() => {
     //         matomoStat(url); // Appel à votre fonction d'origine
-    //         resolve();
+    //         resolve();F
     //     }, 500);
     // });
 
